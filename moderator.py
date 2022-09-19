@@ -5,18 +5,20 @@ from PyQt5 import QtWidgets
 # #import mysql.connector
 # from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtSql import QSqlDatabase, QSqlTableModel
+from PyQt5.QtCore import QtMsgType
+from PyQt5.QtSql import (
+    QSqlDatabase,
+    QSqlQuery
+)
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
-    QMessageBox,
-    QTableView,
+    QMessageBox
 )
 
 config = {
-    'user':'ehawuser2', 
-    'password':'eHaW$user2', 
+    'user':'ko2f', 
+    'password':'Ko2f2018!', 
     'host':'127.0.0.1', 
     'database':'ehaw'
 }
@@ -33,33 +35,17 @@ class Window(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-#        self.connectSignalsSlots()
-
-        # setup the data model
-        self.model = QSqlTableModel(self)
-        self.model.setTable("msgQueue")
-        self.model.setHeaderData(0, Qt.Horizontal, "msgId")
-        self.model.setHeaderData(1, Qt.Horizontal, "msgType")
-        self.model.setHeaderData(2, Qt.Horizontal, "msgFrom")
-        self.model.setHeaderData(3, Qt.Horizontal, "msgTo")
-        self.model.setHeaderData(4, Qt.Horizontal, "msgStatus")
-        self.model.setHeaderData(5, Qt.Horizontal, "msgWinlinkId")
-        self.model.select()
-        # setup the table view
-        self.ui.tableView.setModel(self.model)
-        self.ui.tableView.resizeColumnsToContents()
-
-
-
-
+        ehawCfg = QSqlQuery("SELECT cfgId, cfgWinlinkExePath, cfgOutPath, cfgSentPath FROM ehaw.ehawconfig")
+        while ehawCfg.next():
+            self.ui.ln_WinlinkExecPath.setText(ehawCfg.value(1))
+            self.ui.ln_WinlinkOutPath.setText(ehawCfg.value(2))
+            self.ui.ln_WinlinkSentPath.setText(ehawCfg.value(3))
 
 def createConnection():
     con = QSqlDatabase.addDatabase("QMYSQL")
     con.setHostName(config["host"])
     con.setDatabaseName(config["database"])
-    con.setUserName(config["user"])
-    con.setPassword(config["password"])
-    if not con.open():
+    if not con.open(config["user"], config["password"]):
         QMessageBox.critical(
             None,
             "QTableView Example - Error!",

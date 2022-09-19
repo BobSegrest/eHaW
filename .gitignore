@@ -1,2 +1,5 @@
 .vscode
 __pycache_
+__pycache_/*
+frag*
+*.sqlite
