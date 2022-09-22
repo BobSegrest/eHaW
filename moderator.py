@@ -1,6 +1,8 @@
 from operator import truediv
 import sys
 import subprocess
+import os
+
 from tkinter import OFF, Scrollbar
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
@@ -73,7 +75,7 @@ class Window(QMainWindow, Ui_MainWindow):
         #Load Open Message Queue
     def loadOpenMessageQueue(self):
         self.tw_OpenMsgQueue.setAlternatingRowColors(1)
-        self.tw_OpenMsgQueue.setColumnCount(4)
+        self.tw_OpenMsgQueue.setColumnCount(5)
         self.tw_OpenMsgQueue.setHorizontalHeaderLabels(["Msg Id", "From", "To", "Message", "Created"])
         openMsgs = QSqlQuery("SELECT msgId, msgFrom, msgTo, msgText, msgCreate FROM ehaw.openMsgQueue")
         rows = -1
@@ -88,15 +90,15 @@ class Window(QMainWindow, Ui_MainWindow):
             if rows == 0:
                 self.actMsgId = openMsgs.value(0)
         #Make each cell in each row read only
-        #for i in range(rows):
-            #for j in range(5):
-                #cell_item = QTableWidgetItem()
-                #print(self.tw_OpenMsgQueue.item(0,0).text())
-                #cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
+        for i in range(rows):
+            for j in range(5):
+                cell_item = QTableWidgetItem()
+                cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
+        tableWidth = self.tw_OpenMsgQueue.width()
         self.tw_OpenMsgQueue.resizeColumnToContents(0)
         self.tw_OpenMsgQueue.resizeColumnToContents(1)
         self.tw_OpenMsgQueue.resizeColumnToContents(2)
-        self.tw_OpenMsgQueue.resizeColumnToContents(3)
+        self.tw_OpenMsgQueue.setColumnWidth(3, int(tableWidth * 0.7))
         self.tw_OpenMsgQueue.horizontalHeader().setStretchLastSection(True)
         self.tw_OpenMsgQueue.selectRow(0)
 
@@ -118,10 +120,13 @@ class Window(QMainWindow, Ui_MainWindow):
 
         #Load Message Queue
     def loadMessageQueue(self):
+        #first update any messages that were sent
+        self.updateSentMsgStatus()
+        #and then get on with it
         self.tw_MsgQueue.setAlternatingRowColors(1)
-        self.tw_MsgQueue.setColumnCount(6)
-        self.tw_MsgQueue.setHorizontalHeaderLabels(["Msg Id", "Status", "From", "Message", "Updated", "Created"])
-        msgQueue = QSqlQuery("SELECT msgId, msgStatus, msgFrom, msgText, msgUpdate, msgCreate FROM ehaw.userMsgQueue")
+        self.tw_MsgQueue.setColumnCount(7)
+        self.tw_MsgQueue.setHorizontalHeaderLabels(["Msg Id","Status","From","Message","Updated","Created","Winlink Id"])
+        msgQueue = QSqlQuery("SELECT msgId, msgStatus, msgFrom, msgText, msgUpdate, msgCreate, msgWinlinkId FROM ehaw.userMsgQueue")
         rows = 0
         while msgQueue.next():
             rows = self.tw_MsgQueue.rowCount()
@@ -132,39 +137,44 @@ class Window(QMainWindow, Ui_MainWindow):
             self.tw_MsgQueue.setItem(rows, 3, QTableWidgetItem(msgQueue.value(3)))
             self.tw_MsgQueue.setItem(rows, 4, QTableWidgetItem(msgQueue.value(4)))
             self.tw_MsgQueue.setItem(rows, 5, QTableWidgetItem(msgQueue.value(5)))
+            self.tw_MsgQueue.setItem(rows, 6, QTableWidgetItem(msgQueue.value(6)))
         #Make each cell in each row read only
         for i in range(rows + 1):
-            for j in range(6):
+            for j in range(7):
                 cell_item = QTableWidgetItem()
                 cell_item = self.tw_MsgQueue.item(i, j)
-                #Set the status field color while we are at it
-                if cell_item.text() == "Submitted": 
-                    cell_item.setBackground(QColor("darkBlue"))
-                    cell_item.setForeground(QColor("white"))
-                elif cell_item.text() == "Accepted":
-                    cell_item.setBackground(QColor(255,255,60))
-                    cell_item.setForeground(QColor("black"))
-                elif cell_item.text() == "Sent":
-                    cell_item.setBackground(QColor("darkGreen"))
-                    cell_item.setForeground(QColor("white"))
-                elif cell_item.text() == "Declined":
-                    cell_item.setBackground(QColor("darkRed"))
-                    cell_item.setForeground(QColor("white"))
+                if j == 1:
+                    #Set the status field color while we are at it
+                    if cell_item.text() == "Submitted": 
+                        cell_item.setBackground(QColor("darkBlue"))
+                        cell_item.setForeground(QColor("white"))
+                    elif cell_item.text() == "Accepted":
+                        cell_item.setBackground(QColor(255,255,60))
+                        cell_item.setForeground(QColor("black"))
+                    elif cell_item.text() == "Sent":
+                        cell_item.setBackground(QColor("darkGreen"))
+                        cell_item.setForeground(QColor("white"))
+                    elif cell_item.text() == "Declined":
+                        cell_item.setBackground(QColor("darkRed"))
+                        cell_item.setForeground(QColor("white"))
                 cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
         tableWidth = self.tw_MsgQueue.width()
         self.tw_MsgQueue.resizeColumnsToContents()
-        self.tw_MsgQueue.setColumnWidth(3, int(tableWidth * 0.68))
+        self.tw_MsgQueue.setColumnWidth(3, int(tableWidth * 0.60))
         self.tw_MsgQueue.horizontalHeader().setStretchLastSection(True)
 
     def AcceptMsg(self):
+        outBefore = get_MIdList(self.le_WinlinkOutPath.text())
         #Submit message to Pat
         cmd = ['pat','compose','-s']
         cmd.append(self.le_ActSubject.text())
         cmd.append(self.le_ActTo.text())
         msg = bytes(self.tb_ActiveMessage.toPlainText() + "\c",'utf-8')
         subprocess.run(cmd,input=msg)
+        outAfter = get_MIdList(self.le_WinlinkOutPath.text())
+        newMId = list(set(outAfter) - set(outBefore))
         #Update active message status
-        qString = "UPDATE msgQueue SET msgStatus = 'Accepted' WHERE msgId = " + str(self.actMsgId)
+        qString = "UPDATE msgQueue SET msgStatus = 'Accepted', msgWinlinkId = '" + newMId[0] + "' WHERE msgId = " + str(self.actMsgId)
         updateMsg = QSqlQuery(qString)
         updateMsg.exec()
         #Clear the active mesage Id
@@ -208,6 +218,16 @@ class Window(QMainWindow, Ui_MainWindow):
             self.loadActiveMessage()
             print("Ignored")
 
+    def updateSentMsgStatus(self):
+        sentMsgs = set(get_MIdList(self.le_WinlinkSentPath.text()))
+        acceptedMsgs = QSqlQuery("SELECT msgId, msgWinlinkId FROM ehaw.acceptedMsgs")
+        while acceptedMsgs.next():
+            if acceptedMsgs.value(1) in sentMsgs:
+                qString = "UPDATE msgQueue SET msgStatus = 'Sent' WHERE msgId = " + str(acceptedMsgs.value(0))
+                updateMsg = QSqlQuery(qString)
+                updateMsg.exec()
+                print("Message ",acceptedMsgs.value(1)," Sent")
+
     def getNextActMsgId(self):
         newActMsgId = 0
         if self.tw_OpenMsgQueue.rowCount() == 1:
@@ -243,6 +263,13 @@ class Window(QMainWindow, Ui_MainWindow):
         self.loadMessageQueue()
 
 
+
+def get_MIdList(path):
+    mList = list()
+    for file in os.listdir(path):
+        if os.path.isfile(os.path.join(path, file)):
+            mList.append(file[:-4])
+    return mList
 
 
 
