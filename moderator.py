@@ -3,8 +3,6 @@ import subprocess
 import os
 import argparse
 
-#from operator import truediv
-#from tkinter import OFF, Scrollbar
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 from PyQt5.QtSql import (
