@@ -57,7 +57,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>30</y>
+        <y>31</y>
         <width>1310</width>
         <height>150</height>
        </rect>
@@ -180,26 +180,6 @@
         <string>Transport Alias</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="cb_Transport">
-       <property name="geometry">
-        <rect>
-         <x>9</x>
-         <y>94</y>
-         <width>210</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>8</pointsize>
-        </font>
-       </property>
-       <item>
-        <property name="text">
-         <string>Telnet</string>
-        </property>
-       </item>
-      </widget>
       <widget class="QPushButton" name="pb_Send">
        <property name="geometry">
         <rect>
@@ -217,6 +197,26 @@
        <property name="text">
         <string>Send Messages</string>
        </property>
+      </widget>
+      <widget class="QComboBox" name="cb_Transport">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>90</y>
+         <width>210</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <item>
+        <property name="text">
+         <string>Telnet</string>
+        </property>
+       </item>
       </widget>
      </widget>
      <widget class="QGroupBox" name="gb_ActMsg">
@@ -352,6 +352,9 @@
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QLineEdit" name="le_ActSubject">
        <property name="geometry">
@@ -367,6 +370,9 @@
          <pointsize>8</pointsize>
         </font>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QLineEdit" name="le_ActTo">
        <property name="geometry">
@@ -381,6 +387,9 @@
         <font>
          <pointsize>8</pointsize>
         </font>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLabel" name="label_9">
@@ -474,33 +483,130 @@
        </property>
       </widget>
      </widget>
+     <widget class="QPushButton" name="pb_RefreshOpenMsgQueue">
+      <property name="geometry">
+       <rect>
+        <x>1213</x>
+        <y>4</y>
+        <width>100</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Refresh Queue</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_Admin">
      <attribute name="title">
       <string>Admin</string>
      </attribute>
-     <widget class="QFrame" name="frame">
+     <widget class="QPushButton" name="pb_ReloadAdmin">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>450</y>
-        <width>651</width>
-        <height>201</height>
+        <x>1224</x>
+        <y>660</y>
+        <width>121</width>
+        <height>23</height>
        </rect>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+      <property name="text">
+       <string>Reload Admin Data</string>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+     </widget>
+     <widget class="QGroupBox" name="gb_WinlinkConfig">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>441</y>
+        <width>1091</width>
+        <height>231</height>
+       </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>Winlink Configuration</string>
+      </property>
+      <widget class="QPushButton" name="pb_WinlinkSave">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>540</x>
+         <y>200</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
       <widget class="QLineEdit" name="le_WinlinkExecPath">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>40</y>
+         <y>47</y>
          <width>631</width>
-         <height>20</height>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_WinlinkSentPath">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>160</y>
+         <width>631</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>83</y>
+         <width>111</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Winlink Out Folder Path</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_WinlinkOutPath">
+       <property name="geometry">
+        <rect>
+         <x>9</x>
+         <y>103</y>
+         <width>631</width>
+         <height>30</height>
         </rect>
        </property>
        <property name="font">
@@ -513,164 +619,134 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>20</y>
+         <y>27</y>
          <width>141</width>
          <height>16</height>
         </rect>
        </property>
-       <property name="text">
-        <string>Winlink Executable Path</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>70</y>
-         <width>111</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Winlink Out Folder Path</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="le_WinlinkOutPath">
-       <property name="geometry">
-        <rect>
-         <x>9</x>
-         <y>90</y>
-         <width>631</width>
-         <height>20</height>
-        </rect>
-       </property>
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <pointsize>8</pointsize>
         </font>
+       </property>
+       <property name="text">
+        <string>Winlink Executable Path</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>120</y>
+         <y>140</y>
          <width>121</width>
          <height>16</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Winlink Sent Folder Path</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="le_WinlinkSentPath">
+      <widget class="QListWidget" name="lw_Transport">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>140</y>
-         <width>631</width>
+         <x>670</x>
+         <y>48</y>
+         <width>401</width>
+         <height>110</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <item>
+        <property name="text">
+         <string>Telnet</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>670</x>
+         <y>30</y>
+         <width>100</width>
+         <height>13</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Transport Alias List</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_NewTransport">
+       <property name="geometry">
+        <rect>
+         <x>670</x>
+         <y>170</y>
+         <width>400</width>
          <height>20</height>
         </rect>
        </property>
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <pointsize>8</pointsize>
         </font>
        </property>
       </widget>
-      <widget class="QLabel" name="label_4">
+      <widget class="QPushButton" name="pb_AddTransport">
        <property name="geometry">
         <rect>
-         <x>440</x>
-         <y>10</y>
-         <width>141</width>
-         <height>21</height>
+         <x>980</x>
+         <y>200</y>
+         <width>75</width>
+         <height>23</height>
         </rect>
        </property>
        <property name="font">
         <font>
-         <pointsize>11</pointsize>
+         <pointsize>8</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Winlink Configuration</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pb_WinlinkApply">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>450</x>
-         <y>170</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Apply</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pb_WinlinkSave">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>540</x>
-         <y>170</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Save</string>
+        <string>Add</string>
        </property>
       </widget>
      </widget>
-     <widget class="QFrame" name="frame_2">
+     <widget class="QGroupBox" name="gb_EventConfig">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>240</y>
-        <width>651</width>
-        <height>191</height>
+        <x>50</x>
+        <y>210</y>
+        <width>1091</width>
+        <height>180</height>
        </rect>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+      <property name="title">
+       <string>eHaW Event Configuration</string>
       </property>
-      <widget class="QLabel" name="label_10">
-       <property name="geometry">
-        <rect>
-         <x>450</x>
-         <y>10</y>
-         <width>181</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>eHaW Event Configuration</string>
-       </property>
-      </widget>
       <widget class="QTableWidget" name="tw_EventConfig">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>40</y>
-         <width>631</width>
-         <height>111</height>
+         <x>20</x>
+         <y>30</y>
+         <width>1051</width>
+         <height>110</height>
         </rect>
        </property>
        <column>
@@ -697,11 +773,16 @@
       <widget class="QPushButton" name="pb_EventSave">
        <property name="geometry">
         <rect>
-         <x>540</x>
-         <y>160</y>
+         <x>570</x>
+         <y>150</y>
          <width>75</width>
          <height>23</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Save</string>
@@ -710,42 +791,21 @@
       <widget class="QPushButton" name="pb_EventCreate">
        <property name="geometry">
         <rect>
-         <x>360</x>
-         <y>160</y>
-         <width>75</width>
+         <x>440</x>
+         <y>150</y>
+         <width>80</width>
          <height>23</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Create</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pb_Apply">
-       <property name="geometry">
-        <rect>
-         <x>450</x>
-         <y>160</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Apply</string>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QPushButton" name="pb_ReloadAdmin">
-      <property name="geometry">
-       <rect>
-        <x>1224</x>
-        <y>660</y>
-        <width>121</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Reload Admin Data</string>
-      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_Queue">
@@ -815,6 +875,19 @@
        <string>Message Queue</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="pb_ReloadMsgQueue">
+      <property name="geometry">
+       <rect>
+        <x>1243</x>
+        <y>4</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Reload</string>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -828,8 +901,31 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>le_ActMsgSelectId</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_ActMsgRetrieve</receiver>
+   <slot>animateClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>962</x>
+     <y>457</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>965</x>
+     <y>480</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

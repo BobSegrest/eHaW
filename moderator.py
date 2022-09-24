@@ -1,9 +1,10 @@
-from operator import truediv
 import sys
 import subprocess
 import os
+import argparse
 
-from tkinter import OFF, Scrollbar
+#from operator import truediv
+#from tkinter import OFF, Scrollbar
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 from PyQt5.QtSql import (
@@ -37,6 +38,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.pb_ActMsgAccept.clicked.connect(self.AcceptMsg)
         self.pb_ActMsgDecline.clicked.connect(self.DeclineMsg)
         self.pb_ActMsgIgnore.clicked.connect(self.IgnoreMsg)
+        self.pb_Send.clicked.connect(self.sendWinlinkMsgs)
+        self.pb_ActMsgRetrieve.clicked.connect(self.retrieveOpenMsg)
+        self.pb_ReloadMsgQueue.clicked.connect(self.reloadMessageQueues)
+        self.pb_RefreshOpenMsgQueue.clicked.connect(self.reloadMessageQueues)
+        self.pb_ReloadAdmin.clicked.connect(self.reloadAdminData)
+        self.pb_EventCreate.clicked.connect(self.createNewEvent)
 
     def loadInitialData(self):
         self.loadWinlinkConfig()
@@ -44,7 +51,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.loadOpenMessageQueue()
         self.loadActiveMessage()
         self.loadMessageQueue()
-        
+        self.reloadAdminData()
+        self.lcd_OutCount.display(len(get_MIdList(self.le_WinlinkOutPath.text())))
+
         #Load Winlink configuration
     def loadWinlinkConfig(self):
         ehawCfg = QSqlQuery("SELECT cfgId, cfgWinlinkExePath, cfgOutPath, cfgSentPath FROM ehaw.ehawconfig")
@@ -55,7 +64,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         #Load Event Configuration
     def loadEventMetadata(self):
-        self.tw_EventConfig.setAlternatingRowColors(1)
+        self.tw_EventConfig.setAlternatingRowColors(True)
         self.tw_EventConfig.setColumnCount(4)
         self.tw_EventConfig.setHorizontalHeaderLabels(["Event Id", "Operator Call", "Winlink Call", "Event Location / Description"])
         ehawEvents = QSqlQuery("SELECT eventId, eventOperatorCallsign, eventWinlinkCallsign, eventLocation FROM ehaw.eventMetadata")
@@ -66,15 +75,32 @@ class Window(QMainWindow, Ui_MainWindow):
             self.tw_EventConfig.setItem(rows, 1, QTableWidgetItem(ehawEvents.value(1)))
             self.tw_EventConfig.setItem(rows, 2, QTableWidgetItem(ehawEvents.value(2)))
             self.tw_EventConfig.setItem(rows, 3, QTableWidgetItem(ehawEvents.value(3)))
+        rows = self.tw_EventConfig.rowCount()
+        for i in range(rows):
+            for j in range(4):
+                cell_item = self.tw_EventConfig.item(i,j)
+                cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
         self.tw_EventConfig.resizeColumnToContents(0)
         self.tw_EventConfig.resizeColumnToContents(1)
         self.tw_EventConfig.resizeColumnToContents(2)
         self.tw_EventConfig.horizontalHeader().setStretchLastSection(True)
-        self.tw_EventConfig.resizeColumnsToContents()
+
+        #Add a new row to the Event configuration table
+    def createNewEvent(self):
+        rows = self.tw_EventConfig.rowCount()
+        self.tw_EventConfig.setRowCount(rows + 1)
+        self.tw_EventConfig.setItem(rows, 1, QTableWidgetItem(""))
+        self.tw_EventConfig.setItem(rows, 2, QTableWidgetItem(""))
+        self.tw_EventConfig.setItem(rows, 3, QTableWidgetItem(""))
+        #make the blank event Id read-only
+        rows = self.tw_EventConfig.rowCount()
+        cell_item = self.tw_EventConfig.item(0,1)
+        cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
+
 
         #Load Open Message Queue
     def loadOpenMessageQueue(self):
-        self.tw_OpenMsgQueue.setAlternatingRowColors(1)
+        self.tw_OpenMsgQueue.setAlternatingRowColors(True)
         self.tw_OpenMsgQueue.setColumnCount(5)
         self.tw_OpenMsgQueue.setHorizontalHeaderLabels(["Msg Id", "From", "To", "Message", "Created"])
         openMsgs = QSqlQuery("SELECT msgId, msgFrom, msgTo, msgText, msgCreate FROM ehaw.openMsgQueue")
@@ -98,7 +124,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.tw_OpenMsgQueue.resizeColumnToContents(0)
         self.tw_OpenMsgQueue.resizeColumnToContents(1)
         self.tw_OpenMsgQueue.resizeColumnToContents(2)
-        self.tw_OpenMsgQueue.setColumnWidth(3, int(tableWidth * 0.7))
+        self.tw_OpenMsgQueue.setColumnWidth(3, int(tableWidth * 0.6))
         self.tw_OpenMsgQueue.horizontalHeader().setStretchLastSection(True)
         self.tw_OpenMsgQueue.selectRow(0)
 
@@ -122,6 +148,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def loadMessageQueue(self):
         #first update any messages that were sent
         self.updateSentMsgStatus()
+        self.lcd_OutCount.display(len(get_MIdList(self.le_WinlinkOutPath.text())))
         #and then get on with it
         self.tw_MsgQueue.setAlternatingRowColors(1)
         self.tw_MsgQueue.setColumnCount(7)
@@ -168,10 +195,17 @@ class Window(QMainWindow, Ui_MainWindow):
         #Submit message to Pat
         cmd = ['pat','compose','-s']
         cmd.append(self.le_ActSubject.text())
-        cmd.append(self.le_ActTo.text())
+        print(self.le_ActTo.text())
+        print((self.le_ActTo.text()).replace(';',', '))
+
+        msgTo = self.le_ActTo.text().split(';')
+        for i in range(len(msgTo)):
+            cmd.append(msgTo[i])
+        print(cmd)
         msg = bytes(self.tb_ActiveMessage.toPlainText() + "\c",'utf-8')
         subprocess.run(cmd,input=msg)
         outAfter = get_MIdList(self.le_WinlinkOutPath.text())
+        self.lcd_OutCount.display(len(outAfter))
         newMId = list(set(outAfter) - set(outBefore))
         #Update active message status
         qString = "UPDATE msgQueue SET msgStatus = 'Accepted', msgWinlinkId = '" + newMId[0] + "' WHERE msgId = " + str(self.actMsgId)
@@ -180,34 +214,31 @@ class Window(QMainWindow, Ui_MainWindow):
         #Clear the active mesage Id
         self.actMsgId = 0
         #Reload open message queue
-        self.reloadOpenMessageQueue()
+        self.reloadMessageQueues()
         #Load new active message
         self.loadActiveMessage()
         #Refresh message queue
         self.loadMessageQueue()
-        print("accepted")
+        statusMsg = "Message accepted with Winlink Id " + str(newMId[0])
+        self.statusbar.showMessage(statusMsg,3000)
 
     def DeclineMsg(self):
-        #Submit message to Pat
-        cmd = ['pat','compose','-s']
-        cmd.append(self.le_ActSubject.text())
-        cmd.append(self.le_ActTo.text())
-        msg = bytes(self.tb_ActiveMessage.toPlainText() + "\c",'utf-8')
-        subprocess.run(cmd,input=msg)
         #Update active message status
         qString = "UPDATE msgQueue SET msgStatus = 'Declined' WHERE msgId = " + str(self.actMsgId)
         updateMsg = QSqlQuery(qString)
         updateMsg.exec()
+        #update status bar
+        statusMsg = "eHaW message " + str(self.actMsgId) + " Declined"
+        self.statusbar.showMessage(statusMsg,3000)
         #Clear the active mesage Id
         self.actMsgId = 0
         #Reload open message queue
-        self.reloadOpenMessageQueue()
+        self.reloadMessageQueues()
         #Load new active message
         self.loadActiveMessage()
         #Refresh message queue
         self.loadMessageQueue()
-        print("accepted")
-
+ 
     def IgnoreMsg(self):
         #Move active message Id to next message in open message queue
         newActMsgId = self.getNextActMsgId()
@@ -216,8 +247,27 @@ class Window(QMainWindow, Ui_MainWindow):
             self.selectActMsgRow()
             #Load new active message
             self.loadActiveMessage()
-            print("Ignored")
+            statusMsg = "Active message set to " + str(newActMsgId)
+            self.statusbar.showMessage(statusMsg,2000)
 
+    def sendWinlinkMsgs(self):
+        #Send Connect command to Pat
+        cmd = ['pat','connect','telnet']
+        cmd.append(self.le_Transport.text())
+        subprocess.run(cmd)
+        #Refresh message queue
+        self.loadMessageQueue()
+        #Update the Outbox count
+        self.lcd_OutCount.display(len(get_MIdList(self.le_WinlinkOutPath.text())))
+
+    def retrieveOpenMsg(self):
+        self.actMsgId = int(self.le_ActMsgSelectId.text())
+        self.selectActMsgRow()
+        #Load new active message
+        self.loadActiveMessage()
+        statusMsg = "Active message set to " + str(self.actMsgId)
+        self.statusbar.showMessage(statusMsg,2000)
+        
     def updateSentMsgStatus(self):
         sentMsgs = set(get_MIdList(self.le_WinlinkSentPath.text()))
         acceptedMsgs = QSqlQuery("SELECT msgId, msgWinlinkId FROM ehaw.acceptedMsgs")
@@ -226,7 +276,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 qString = "UPDATE msgQueue SET msgStatus = 'Sent' WHERE msgId = " + str(acceptedMsgs.value(0))
                 updateMsg = QSqlQuery(qString)
                 updateMsg.exec()
-                print("Message ",acceptedMsgs.value(1)," Sent")
+                self.statusbar.showMessage("Winlink Outbox messages have been sent",5000)
 
     def getNextActMsgId(self):
         newActMsgId = 0
@@ -242,7 +292,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     if newCell_item.text() != None:
                         newActMsgId = int(newCell_item.text())
                 else:   #reset to top of queue
-                    self.reloadOpenMessageQueue()
+                    self.reloadMessageQueues()
                     newCell_item = self.tw_OpenMsgQueue.item(0, 0)
                     newActMsgId = int(newCell_item.text())
         return newActMsgId
@@ -254,13 +304,19 @@ class Window(QMainWindow, Ui_MainWindow):
             if cell_item.text() == str(self.actMsgId):
                 self.tw_OpenMsgQueue.selectRow(r)
 
-    def reloadOpenMessageQueue(self):
+    def reloadMessageQueues(self):
         while self.tw_OpenMsgQueue.rowCount() > 0:
             self.tw_OpenMsgQueue.removeRow(0)
         self.loadOpenMessageQueue()
         while self.tw_MsgQueue.rowCount() > 0:
             self.tw_MsgQueue.removeRow(0)
         self.loadMessageQueue()
+
+    def reloadAdminData(self):
+        while self.tw_EventConfig.rowCount() > 0:
+            self.tw_EventConfig.removeRow(0)
+        self.loadEventMetadata()
+        self.loadWinlinkConfig()
 
 
 
@@ -270,8 +326,6 @@ def get_MIdList(path):
         if os.path.isfile(os.path.join(path, file)):
             mList.append(file[:-4])
     return mList
-
-
 
 def createConnection():
     con = QSqlDatabase.addDatabase("QMYSQL")
@@ -288,14 +342,32 @@ def createConnection():
 
 # main
 app = QApplication(sys.argv)
+parser = argparse.ArgumentParser()
+parser.add_argument("-ubuntu", 
+                    help="The ubuntu stylesheet will be used.",
+                    action="store_true")
+parser.add_argument("-none", 
+                    help="No stylesheet will be used.",
+                    action="store_true")
+args = parser.parse_args()
 if not createConnection():
     sys.exit(1)
 if __name__ == "__main__":
     win = Window()
     win.show()
-    with open('ubuntu.qss','r') as f:
-        style = f.read()
-        app.setStyleSheet(style)
+    if args.ubuntu:
+        with open('ubuntu.qss','r') as f:
+            style = f.read()
+            app.setStyleSheet(style)
+    elif args.none:
+        print("launching without style...")
+    else:
+        win.tw_EventConfig.setStyleSheet("alternate-background-color: gray;")
+        win.tw_OpenMsgQueue.setStyleSheet("alternate-background-color: gray;")
+        win.tw_MsgQueue.setStyleSheet("alternate-background-color: gray;")
+        with open('Combinear.qss','r') as f:
+            style = f.read()
+            app.setStyleSheet(style)
 try:
     sys.exit(app.exec_())
 except:

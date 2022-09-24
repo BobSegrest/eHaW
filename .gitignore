@@ -4,3 +4,9 @@ __pycache_/*
 frag*
 *.sqlite
 pat.exe
+build
+dist
+*.ifp
+*.spec
+sqldrivers
+*.dll
