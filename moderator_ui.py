@@ -247,7 +247,7 @@ class Ui_MainWindow(object):
         self.lw_Transport = QtWidgets.QListWidget(self.gb_WinlinkConfig)
         self.lw_Transport.setGeometry(QtCore.QRect(670, 48, 401, 110))
         font = QtGui.QFont()
-        font.setPointSize(8)
+        font.setPointSize(10)
         self.lw_Transport.setFont(font)
         self.lw_Transport.setObjectName("lw_Transport")
         item = QtWidgets.QListWidgetItem()

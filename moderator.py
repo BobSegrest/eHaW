@@ -1,3 +1,4 @@
+from ast import Not
 import sys
 import subprocess
 import os
@@ -13,8 +14,7 @@ from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
     QMessageBox,
-    QTableWidgetItem,
-    QPushButton
+    QTableWidgetItem
 )
 from moderator_ui import Ui_MainWindow
 
@@ -42,10 +42,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.pb_RefreshOpenMsgQueue.clicked.connect(self.reloadMessageQueues)
         self.pb_ReloadAdmin.clicked.connect(self.reloadAdminData)
         self.pb_EventCreate.clicked.connect(self.createNewEvent)
+        self.pb_AddTransport.clicked.connect(self.addTransportAlias)
+
 
     def loadInitialData(self):
         self.loadWinlinkConfig()
         self.loadEventMetadata()
+        self.loadTransportAliases()
+        self.loadTransportCb()
         self.loadOpenMessageQueue()
         self.loadActiveMessage()
         self.loadMessageQueue()
@@ -95,6 +99,13 @@ class Window(QMainWindow, Ui_MainWindow):
         cell_item = self.tw_EventConfig.item(0,1)
         cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
 
+        #Load Transport Aliases
+    def loadTransportAliases(self):
+        self.lw_Transport.setAlternatingRowColors(True)
+        self.lw_Transport.clear()
+        tAliases = QSqlQuery("SELECT tAlias FROM ehaw.transportAlias")
+        while tAliases.next():
+            self.lw_Transport.addItem(tAliases.value(0))
 
         #Load Open Message Queue
     def loadOpenMessageQueue(self):
@@ -191,7 +202,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def AcceptMsg(self):
         outBefore = get_MIdList(self.le_WinlinkOutPath.text())
         #Submit message to Pat
-        cmd = ['pat','compose','-s']
+        cmd = [self.le_WinlinkExecPath.text(),'compose','-s']
         cmd.append(self.le_ActSubject.text())
         print(self.le_ActTo.text())
         print((self.le_ActTo.text()).replace(';',', '))
@@ -250,13 +261,40 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def sendWinlinkMsgs(self):
         #Send Connect command to Pat
-        cmd = ['pat','connect','telnet']
-        cmd.append(self.le_Transport.text())
+        cmd = [self.le_WinlinkExecPath.text(),'connect']
+        cmd.append(self.cb_Transport.currentText())
         subprocess.run(cmd)
         #Refresh message queue
         self.loadMessageQueue()
         #Update the Outbox count
         self.lcd_OutCount.display(len(get_MIdList(self.le_WinlinkOutPath.text())))
+
+    def addTransportAlias(self):
+        newAlias = self.le_NewTransport.text()
+        if newAlias:
+            aDupe = False
+            for a in range(self.lw_Transport.count()):
+                if self.lw_Transport.item(a).text() == newAlias:
+                    aDupe = True
+            if not aDupe:
+                qString = 'Insert INTO transportAlias (tAlias) VALUES ("' + newAlias + '")'
+                insertAlias = QSqlQuery(qString)
+                self.loadTransportAliases()
+                self.statusbar.showMessage("New Transport Alias Created",2000)
+                self.le_NewTransport.clear()
+                aliasNow = self.cb_Transport.currentText()
+                self.loadTransportCb()
+                for t in range(self.cb_Transport.count()):
+                    if self.cb_Transport.currentText() == newAlias:
+                        self.cb_Transport.setCurrentIndex(t)
+            else:
+                self.statusbar.showMessage("That alias appears to already be in the Transport Alias list.",2000)
+
+        #Load the Transport comboBox
+    def loadTransportCb(self):
+        self.cb_Transport.clear()
+        for a in range(self.lw_Transport.count()):
+            self.cb_Transport.addItem(self.lw_Transport.item(a).text())
 
     def retrieveOpenMsg(self):
         self.actMsgId = int(self.le_ActMsgSelectId.text())
