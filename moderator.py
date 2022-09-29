@@ -1,4 +1,3 @@
-from ast import Not
 import sys
 import subprocess
 import os
@@ -196,13 +195,16 @@ class Window(QMainWindow, Ui_MainWindow):
                 cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
         tableWidth = self.tw_MsgQueue.width()
         self.tw_MsgQueue.resizeColumnsToContents()
-        self.tw_MsgQueue.setColumnWidth(3, int(tableWidth * 0.60))
+        self.tw_MsgQueue.setColumnWidth(3, int(tableWidth * 0.58))
         self.tw_MsgQueue.horizontalHeader().setStretchLastSection(True)
 
     def AcceptMsg(self):
         outBefore = get_MIdList(self.le_WinlinkOutPath.text())
         #Submit message to Pat
-        cmd = [self.le_WinlinkExecPath.text(),'compose','-s']
+        if len(self.le_WinlinkExecPath.text()) > 0:
+            cmd = [self.le_WinlinkExecPath.text(),'compose','-s']
+        else:
+            cmd = ['pat','compose','-s']
         cmd.append(self.le_ActSubject.text())
         print(self.le_ActTo.text())
         print((self.le_ActTo.text()).replace(';',', '))
@@ -261,8 +263,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def sendWinlinkMsgs(self):
         #Send Connect command to Pat
-        cmd = [self.le_WinlinkExecPath.text(),'connect']
-        cmd.append(self.cb_Transport.currentText())
+        if len(self.le_WinlinkExecPath.text()) > 0:
+            cmd = [self.le_WinlinkExecPath.text(),'connect']
+        else:
+            cmd = ['pat','connect']
+        cmd.append(self.cb_Transport.currentt())
         subprocess.run(cmd)
         #Refresh message queue
         self.loadMessageQueue()
@@ -344,6 +349,7 @@ class Window(QMainWindow, Ui_MainWindow):
         while self.tw_OpenMsgQueue.rowCount() > 0:
             self.tw_OpenMsgQueue.removeRow(0)
         self.loadOpenMessageQueue()
+        self.loadActiveMessage()
         while self.tw_MsgQueue.rowCount() > 0:
             self.tw_MsgQueue.removeRow(0)
         self.loadMessageQueue()
