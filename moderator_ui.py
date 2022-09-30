@@ -34,7 +34,7 @@ class Ui_MainWindow(object):
         self.tab_Moderator.setFont(font)
         self.tab_Moderator.setObjectName("tab_Moderator")
         self.tw_OpenMsgQueue = QtWidgets.QTableWidget(self.tab_Moderator)
-        self.tw_OpenMsgQueue.setGeometry(QtCore.QRect(10, 31, 1270, 150))
+        self.tw_OpenMsgQueue.setGeometry(QtCore.QRect(10, 31, 1270, 140))
         self.tw_OpenMsgQueue.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tw_OpenMsgQueue.setObjectName("tw_OpenMsgQueue")
         self.tw_OpenMsgQueue.setColumnCount(5)
@@ -305,7 +305,7 @@ class Ui_MainWindow(object):
         self.tab_Queue = QtWidgets.QWidget()
         self.tab_Queue.setObjectName("tab_Queue")
         self.tw_MsgQueue = QtWidgets.QTableWidget(self.tab_Queue)
-        self.tw_MsgQueue.setGeometry(QtCore.QRect(11, 30, 1280, 620))
+        self.tw_MsgQueue.setGeometry(QtCore.QRect(11, 30, 1280, 611))
         self.tw_MsgQueue.setObjectName("tw_MsgQueue")
         self.tw_MsgQueue.setColumnCount(7)
         self.tw_MsgQueue.setRowCount(0)
@@ -342,7 +342,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         self.le_ActMsgSelectId.returnPressed.connect(self.pb_ActMsgRetrieve.animateClick) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 

@@ -39,7 +39,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="movable">
      <bool>true</bool>
@@ -59,7 +59,7 @@
         <x>10</x>
         <y>31</y>
         <width>1270</width>
-        <height>150</height>
+        <height>140</height>
        </rect>
       </property>
       <property name="editTriggers">
@@ -818,7 +818,7 @@
         <x>11</x>
         <y>30</y>
         <width>1280</width>
-        <height>620</height>
+        <height>611</height>
        </rect>
       </property>
       <column>

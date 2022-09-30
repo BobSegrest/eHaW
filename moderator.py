@@ -2,6 +2,7 @@ import sys
 import subprocess
 import os
 import argparse
+import base64
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
@@ -16,14 +17,11 @@ from PyQt5.QtWidgets import (
     QTableWidgetItem
 )
 from moderator_ui import Ui_MainWindow
+from dotenv import load_dotenv
+
 
 #Define variables
-config = {
-    'user':'ehawuser2', 
-    'password':'eHaW$user2', 
-    'host':'127.0.0.1', 
-    'database':'ehaw'
-}
+eDict = {}
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -361,6 +359,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.loadWinlinkConfig()
 
 
+def getEnvironmentVariables():
+    load_dotenv(".env")
+    # Decode the environment variables into our environmental dictionary
+    eDict.update({"MODERATORUSER" : base64.b64decode(os.getenv("MODERATORUSER")).decode("utf-8")})
+    eDict.update({"MODERATORPWD" : base64.b64decode(os.getenv("MODERATORPWD")).decode("utf-8")})
 
 def get_MIdList(path):
     mList = list()
@@ -370,10 +373,11 @@ def get_MIdList(path):
     return mList
 
 def createConnection():
+    getEnvironmentVariables()
     con = QSqlDatabase.addDatabase("QMYSQL")
-    con.setHostName(config["host"])
-    con.setDatabaseName(config["database"])
-    if not con.open(config["user"], config["password"]):
+    con.setHostName("localhost")
+    con.setDatabaseName("ehaw")
+    if not con.open(eDict.get("MODERATORUSER"), eDict.get("MODERATORPWD")):
         QMessageBox.critical(
             None,
             "QTableView Example - Error!",

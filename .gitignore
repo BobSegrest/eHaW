@@ -10,3 +10,4 @@ dist
 *.spec
 sqldrivers
 *.dll
+.env
