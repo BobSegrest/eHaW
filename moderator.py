@@ -40,6 +40,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.pb_ReloadAdmin.clicked.connect(self.reloadAdminData)
         self.pb_EventCreate.clicked.connect(self.createNewEvent)
         self.pb_AddTransport.clicked.connect(self.addTransportAlias)
+        self.pb_EventSave.clicked.connect(self.saveNewEvent)
 
 
     def loadInitialData(self):
@@ -66,7 +67,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.tw_EventConfig.setAlternatingRowColors(True)
         self.tw_EventConfig.setColumnCount(4)
         self.tw_EventConfig.setHorizontalHeaderLabels(["Event Id", "Operator Call", "Winlink Call", "Event Location / Description"])
-        ehawEvents = QSqlQuery("SELECT eventId, eventOperatorCallsign, eventWinlinkCallsign, eventLocation FROM ehaw.eventMetadata")
+        ehawEvents = QSqlQuery("SELECT eventId, eventOperatorCallsign, eventWinlinkCallsign, eventLocation FROM eventMetadata")
         while ehawEvents.next():
             rows = self.tw_EventConfig.rowCount()
             self.tw_EventConfig.setRowCount(rows + 1)
@@ -95,6 +96,46 @@ class Window(QMainWindow, Ui_MainWindow):
         rows = self.tw_EventConfig.rowCount()
         cell_item = self.tw_EventConfig.item(0,1)
         cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
+
+        #Save the new Event
+    def saveNewEvent(self):
+        r = self.tw_EventConfig.rowCount()
+        if r > 1:
+            r = r-1
+            if (self.tw_EventConfig.item(r,0) == None and 
+                len(self.tw_EventConfig.item(r,1).text()) > 2 and
+                len(self.tw_EventConfig.item(r,2).text()) > 2 and
+                len(self.tw_EventConfig.item(r,3).text()) >= 20):
+                if self.newEventWarning():
+                    qString = "INSERT INTO eventMetadata (eventOperatorCallsign, eventWinlinkCallsign, eventLocation) VALUES ('"
+                    qString = qString + self.tw_EventConfig.item(r,1).text() + "','"
+                    qString = qString + self.tw_EventConfig.item(r,2).text() + "','"
+                    qString = qString + self.tw_EventConfig.item(r,3).text() + "')"
+                    QSqlQuery(qString).exec
+                    while self.tw_EventConfig.rowCount() > 0:
+                        self.tw_EventConfig.removeRow(0)
+                    self.loadEventMetadata()
+                    self.reloadMessageQueues()
+                    self.statusbar.showMessage("New eHaW Event Created",2000)
+
+
+    def newEventWarning(self):
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.Yes|QMessageBox.Cancel)
+        msg.setIcon(QMessageBox.Warning)
+        msg.setStyleSheet("QLabel{font-size: 14px;}")
+        msg.setWindowTitle("Before you proceed...")
+        details = "When you save a new eHaW event, the previous eHaW event is closed,"
+        details = details + "all existing messages are effectively locked and will no "
+        details = details + "longer be displayed.\n\n"
+        details = details + "New messages will be associated with the new event.\n\n"
+        details = details + "Do you want to proceed?"
+        msg.setText(details)
+        button = msg.exec_()
+        if button == QMessageBox.Yes:
+            return True
+        else:
+            return False
 
         #Load Transport Aliases
     def loadTransportAliases(self):
@@ -172,25 +213,26 @@ class Window(QMainWindow, Ui_MainWindow):
             self.tw_MsgQueue.setItem(rows, 5, QTableWidgetItem(msgQueue.value(5)))
             self.tw_MsgQueue.setItem(rows, 6, QTableWidgetItem(msgQueue.value(6)))
         #Make each cell in each row read only
-        for i in range(rows + 1):
-            for j in range(7):
-                cell_item = QTableWidgetItem()
-                cell_item = self.tw_MsgQueue.item(i, j)
-                if j == 1:
-                    #Set the status field color while we are at it
-                    if cell_item.text() == "Submitted": 
-                        cell_item.setBackground(QColor("darkBlue"))
-                        cell_item.setForeground(QColor("white"))
-                    elif cell_item.text() == "Accepted":
-                        cell_item.setBackground(QColor(255,255,60))
-                        cell_item.setForeground(QColor("black"))
-                    elif cell_item.text() == "Sent":
-                        cell_item.setBackground(QColor("darkGreen"))
-                        cell_item.setForeground(QColor("white"))
-                    elif cell_item.text() == "Declined":
-                        cell_item.setBackground(QColor("darkRed"))
-                        cell_item.setForeground(QColor("white"))
-                cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
+        if rows > 0:
+            for i in range(rows + 1):
+                for j in range(7):
+                    cell_item = QTableWidgetItem()
+                    cell_item = self.tw_MsgQueue.item(i, j)
+                    if j == 1:
+                        #Set the status field color while we are at it
+                        if cell_item.text() == "Submitted": 
+                            cell_item.setBackground(QColor("darkBlue"))
+                            cell_item.setForeground(QColor("white"))
+                        elif cell_item.text() == "Accepted":
+                            cell_item.setBackground(QColor(255,255,60))
+                            cell_item.setForeground(QColor("black"))
+                        elif cell_item.text() == "Sent":
+                            cell_item.setBackground(QColor("darkGreen"))
+                            cell_item.setForeground(QColor("white"))
+                        elif cell_item.text() == "Declined":
+                            cell_item.setBackground(QColor("darkRed"))
+                            cell_item.setForeground(QColor("white"))
+                    cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
         tableWidth = self.tw_MsgQueue.width()
         self.tw_MsgQueue.resizeColumnsToContents()
         self.tw_MsgQueue.setColumnWidth(3, int(tableWidth * 0.58))
@@ -265,10 +307,11 @@ class Window(QMainWindow, Ui_MainWindow):
             cmd = [self.le_WinlinkExecPath.text(),'connect']
         else:
             cmd = ['pat','connect']
-        cmd.append(self.cb_Transport.currentt())
+        cmd.append(self.cb_Transport.currentText())
+        print(cmd)
         subprocess.run(cmd)
         #Refresh message queue
-        self.loadMessageQueue()
+        self.reloadMessageQueues()
         #Update the Outbox count
         self.lcd_OutCount.display(len(get_MIdList(self.le_WinlinkOutPath.text())))
 

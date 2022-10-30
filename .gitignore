@@ -11,3 +11,8 @@ dist
 sqldrivers
 *.dll
 .env
+eHaW
+eHaW_Template
+eHaWConfig.exe
+eHaWNode.bat
+eHaW_Template.sql
