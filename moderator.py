@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QTableWidgetItem
 )
-from moderator_ui import Ui_MainWindow
+from moderator_lg_ui import Ui_MainWindow
 from dotenv import load_dotenv
 
 
@@ -51,6 +51,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.loadOpenMessageQueue()
         self.loadActiveMessage()
         self.loadMessageQueue()
+        self.loadEsuToList()
         self.reloadAdminData()
         self.lcd_OutCount.display(len(get_MIdList(self.le_WinlinkOutPath.text())))
 
@@ -67,7 +68,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.tw_EventConfig.setAlternatingRowColors(True)
         self.tw_EventConfig.setColumnCount(4)
         self.tw_EventConfig.setHorizontalHeaderLabels(["Event Id", "Operator Call", "Winlink Call", "Event Location / Description"])
-        ehawEvents = QSqlQuery("SELECT eventId, eventOperatorCallsign, eventWinlinkCallsign, eventLocation FROM eventMetadata")
+        ehawEvents = QSqlQuery("SELECT eventId, eventOperatorCallsign, eventWinlinkCallsign, eventLocation FROM eventMetadata order by eventId desc")
         while ehawEvents.next():
             rows = self.tw_EventConfig.rowCount()
             self.tw_EventConfig.setRowCount(rows + 1)
@@ -117,7 +118,17 @@ class Window(QMainWindow, Ui_MainWindow):
                     self.loadEventMetadata()
                     self.reloadMessageQueues()
                     self.statusbar.showMessage("New eHaW Event Created",2000)
+                    self.resetNodeReminder()
 
+
+    def resetNodeReminder(self):
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setIcon(QMessageBox.Warning)
+        msg.setStyleSheet("QLabel{font-size: 14px;}")
+        msg.setWindowTitle("Before you proceed...")
+        details = "When you Save a new event, you also need to stop and restart the "
+        details = details + "eHaW Node front end.  Do this now, before you forget..."
 
     def newEventWarning(self):
         msg = QMessageBox()
@@ -144,6 +155,14 @@ class Window(QMainWindow, Ui_MainWindow):
         tAliases = QSqlQuery("SELECT tAlias FROM ehaw.transportAlias")
         while tAliases.next():
             self.lw_Transport.addItem(tAliases.value(0))
+
+        #Load Event Status Update To List
+    def loadEsuToList(self):
+        self.lw_EsuToList.setAlternatingRowColors(True)
+        self.lw_EsuToList.clear()
+        toList = QSqlQuery("SELECT msgTo FROM ehaw.esuToList")
+        while toList.next():
+            self.lw_EsuToList.addItem(toList.value(0))
 
         #Load Open Message Queue
     def loadOpenMessageQueue(self):
@@ -237,6 +256,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.tw_MsgQueue.resizeColumnsToContents()
         self.tw_MsgQueue.setColumnWidth(3, int(tableWidth * 0.58))
         self.tw_MsgQueue.horizontalHeader().setStretchLastSection(True)
+        
 
     def AcceptMsg(self):
         outBefore = get_MIdList(self.le_WinlinkOutPath.text())
@@ -246,14 +266,11 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             cmd = ['pat','compose','-s']
         cmd.append(self.le_ActSubject.text())
-        print(self.le_ActTo.text())
-        print((self.le_ActTo.text()).replace(';',', '))
-
         msgTo = self.le_ActTo.text().split(';')
         for i in range(len(msgTo)):
             cmd.append(msgTo[i])
         print(cmd)
-        msg = bytes(self.tb_ActiveMessage.toPlainText() + "\c",'utf-8')
+        msg = bytes(self.tb_ActiveMessage.toPlainText(),'utf-8')
         subprocess.run(cmd,input=msg)
         outAfter = get_MIdList(self.le_WinlinkOutPath.text())
         self.lcd_OutCount.display(len(outAfter))
