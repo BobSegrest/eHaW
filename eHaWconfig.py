@@ -101,11 +101,13 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusbar.showMessage("Configure the eHaW database script",3000)
         self.configureSqlScript()
         self.statusbar.showMessage("Configuring the eHaW Node shortcut",2000)
-        self.finalizeNodeShortcut()
-        self.displaySqlInstructions()
-        self.statusbar.showMessage("Completing the Npm Install for eHaW Node",10000)
-        self.runNpmInstall()
-        os.remove("pat.exe")
+        if bWindows:
+            self.finalizeNodeShortcut()
+            self.displaySqlInstructions()
+            self.statusbar.showMessage("Completing the Npm Install for eHaW Node",10000)
+            self.runNpmInstall()
+        if bWindows:
+            os.remove("pat.exe")
         self.statusbar.showMessage("All done for now.  Click Cancel to close this dialog, Launch the eHaW Node, the Moderator and give it a go!",10000)
 
         # Initialize the environmental variables
@@ -156,7 +158,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             envFile = open("eHaW/.env", "w")
         envFile.write("host=localhost\n")
-        envFile.write("database=ehaw\n")
+        envFile.write("database=eHaW\n")
         envFile.write("user=" + eDict.get("EHAWUSER") + "\n")
         envFile.write("password=" + eDict.get("EHAWUSERPWD") + "\n")
         envFile.close()
@@ -276,8 +278,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     if ln.find("PAT_MAILBOX_PATH") != -1:
                         mailBox = ln[20:len(ln)-2]
         return [mailBox, myCall, bWindows]
-
-
 
 
 # main

@@ -2,7 +2,6 @@
 __pycache_
 __pycache_/*
 frag*
-*.sqlite
 pat.exe
 build
 dist
@@ -12,7 +11,5 @@ sqldrivers
 *.dll
 .env
 eHaW
-eHaW_Template
 eHaWConfig.exe
 eHaWNode.bat
-eHaW_Template.sql
