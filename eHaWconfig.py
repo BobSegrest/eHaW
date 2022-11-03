@@ -5,6 +5,7 @@ import time
 import subprocess
 
 from pathlib import Path
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import (
@@ -145,7 +146,8 @@ class Window(QMainWindow, Ui_MainWindow):
             eDict.update({"WINLINKOUTPATH" : oPath + r"\\out"})
             eDict.update({"WINLINKSENTPATH" : oPath + r"\\sent"})
         else:
-            oPath = str(patEnv[0])
+            oPath = str(patEnv[0]) + "/"
+            oPath = oPath + patEnv[1]
             eDict.update({"WINLINKEXEPATH" : ""})
             eDict.update({"WINLINKOUTPATH" : oPath + "/out"})
             eDict.update({"WINLINKSENTPATH" : oPath + "/sent"})
@@ -287,10 +289,5 @@ if __name__ == "__main__":
     win.show()
 try:
     sys.exit(app.exec_())
-except SystemExit as e:
-    if e == 0:
-        print("exiting")
-    else:
-        print('Error!', e)
-        print('Press enter to exit (and fix the problem)')
-        time.sleep(120)
+except:
+    print("Exiting")

@@ -57,7 +57,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         #Load Winlink configuration
     def loadWinlinkConfig(self):
-        ehawCfg = QSqlQuery("SELECT cfgId, cfgWinlinkExePath, cfgOutPath, cfgSentPath FROM ehaw.ehawconfig")
+        ehawCfg = QSqlQuery("SELECT cfgId, cfgWinlinkExePath, cfgOutPath, cfgSentPath FROM eHaW.ehawConfig")
         while ehawCfg.next():
             self.le_WinlinkExecPath.setText(ehawCfg.value(1))
             self.le_WinlinkOutPath.setText(ehawCfg.value(2))
@@ -152,7 +152,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def loadTransportAliases(self):
         self.lw_Transport.setAlternatingRowColors(True)
         self.lw_Transport.clear()
-        tAliases = QSqlQuery("SELECT tAlias FROM ehaw.transportAlias")
+        tAliases = QSqlQuery("SELECT tAlias FROM eHaW.transportAlias")
         while tAliases.next():
             self.lw_Transport.addItem(tAliases.value(0))
 
@@ -160,7 +160,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def loadEsuToList(self):
         self.lw_EsuToList.setAlternatingRowColors(True)
         self.lw_EsuToList.clear()
-        toList = QSqlQuery("SELECT msgTo FROM ehaw.esuToList")
+        toList = QSqlQuery("SELECT msgTo FROM eHaW.esuToList")
         while toList.next():
             self.lw_EsuToList.addItem(toList.value(0))
 
@@ -169,7 +169,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.tw_OpenMsgQueue.setAlternatingRowColors(True)
         self.tw_OpenMsgQueue.setColumnCount(5)
         self.tw_OpenMsgQueue.setHorizontalHeaderLabels(["Msg Id", "From", "To", "Message", "Created"])
-        openMsgs = QSqlQuery("SELECT msgId, msgFrom, msgTo, msgText, msgCreate FROM ehaw.openMsgQueue")
+        openMsgs = QSqlQuery("SELECT msgId, msgFrom, msgTo, msgText, msgCreate FROM eHaW.openMsgQueue")
         rows = -1
         while openMsgs.next():
             rows = self.tw_OpenMsgQueue.rowCount()
@@ -197,7 +197,7 @@ class Window(QMainWindow, Ui_MainWindow):
         #Retrieve Active Message
     def loadActiveMessage(self):
         if self.actMsgId > 0:
-            qString = "SELECT msgId, msgSubject, msgTo, msgBody FROM ehaw.buildMsg WHERE msgId = " + str(self.actMsgId)
+            qString = "SELECT msgId, msgSubject, msgTo, msgBody FROM eHaW.buildMsg WHERE msgId = " + str(self.actMsgId)
             actMsg = QSqlQuery(qString)
             actMsg.next()
             self.le_ActMsgId.setText(str(actMsg.value(0)))
@@ -219,7 +219,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.tw_MsgQueue.setAlternatingRowColors(1)
         self.tw_MsgQueue.setColumnCount(7)
         self.tw_MsgQueue.setHorizontalHeaderLabels(["Msg Id","Status","From","Message","Updated","Created","Winlink Id"])
-        msgQueue = QSqlQuery("SELECT msgId, msgStatus, msgFrom, msgText, msgUpdate, msgCreate, msgWinlinkId FROM ehaw.userMsgQueue")
+        msgQueue = QSqlQuery("SELECT msgId, msgStatus, msgFrom, msgText, msgUpdate, msgCreate, msgWinlinkId FROM eHaW.userMsgQueue")
         rows = 0
         while msgQueue.next():
             rows = self.tw_MsgQueue.rowCount()
@@ -369,7 +369,7 @@ class Window(QMainWindow, Ui_MainWindow):
         
     def updateSentMsgStatus(self):
         sentMsgs = set(get_MIdList(self.le_WinlinkSentPath.text()))
-        acceptedMsgs = QSqlQuery("SELECT msgId, msgWinlinkId FROM ehaw.acceptedMsgs")
+        acceptedMsgs = QSqlQuery("SELECT msgId, msgWinlinkId FROM eHaW.acceptedMsgs")
         while acceptedMsgs.next():
             if acceptedMsgs.value(1) in sentMsgs:
                 qString = "UPDATE msgQueue SET msgStatus = 'Sent' WHERE msgId = " + str(acceptedMsgs.value(0))
@@ -436,7 +436,7 @@ def createConnection():
     getEnvironmentVariables()
     con = QSqlDatabase.addDatabase("QMYSQL")
     con.setHostName("localhost")
-    con.setDatabaseName("ehaw")
+    con.setDatabaseName("eHaW")
     if not con.open(eDict.get("MODERATORUSER"), eDict.get("MODERATORPWD")):
         QMessageBox.critical(
             None,
