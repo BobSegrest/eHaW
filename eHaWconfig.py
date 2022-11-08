@@ -155,9 +155,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusbar.showMessage("Setting up the eHaW Web environment variables",3000)
         # create the Moderator .env file
         if bWindows:
-            envFile = open(".\eHaW\.env", "w")
+            envFile = open(".\\Node\\.env", "w")
         else:
-            envFile = open("eHaW/.env", "w")
+            envFile = open("Node/.env", "w")
         envFile.write("host=localhost\n")
         envFile.write("database=eHaW\n")
         envFile.write("user=" + eDict.get("EHAWUSER") + "\n")
@@ -179,9 +179,9 @@ class Window(QMainWindow, Ui_MainWindow):
         reader.close()
         # write the localized SQL script
         if bWindows:
-            scriptFile = open(".\eHaW\Setup_eHaW_support_database.sql", "w")
+            scriptFile = open(".\\Node\\Setup_eHaW_support_database.sql", "w")
         else:
-            scriptFile = open("./eHaW/Setup_eHaW_support_database.sql", "w")
+            scriptFile = open("./Node/Setup_eHaW_support_database.sql", "w")
         t = ""
         keyList = list(eDict.keys())
         valList = list(eDict.values())
@@ -199,10 +199,10 @@ class Window(QMainWindow, Ui_MainWindow):
         print("finalizing eHaW Node shortcut")
         self.statusbar.showMessage("Finalizing the eHaW Node shortcut",1000)
         batchPath = os.getcwd() 
-        batchFile = batchPath + r"\eHaW\eHaWNode.bat"
+        batchFile = batchPath + r"\Node\eHaWNode.bat"
         os.remove(batchFile)
         with open(batchFile, 'w') as outFile:
-            outFile.write("cd " + batchPath + "\ehaw\n")
+            outFile.write("cd " + batchPath + "\\Node\n")
             outFile.write("npm start\n")
         outFile.close()
 
@@ -220,7 +220,7 @@ class Window(QMainWindow, Ui_MainWindow):
         details = details + "      [don't forget to include the quotation marks...]\n"
         details = details + "3. When prompted, enter you eHaW admin password\n"
         details = details + "4. Enter the following command line:\n"
-        details = details + '    source ' + os.getcwd() + '\eHaW\Setup_eHaW_support_database.sql\n'
+        details = details + '    source ' + os.getcwd() + r'\Node\Setup_eHaW_support_database.sql\n'
         details = details + "5. Scroll your Cmd window as needed and verify there were no errors\n"
         details = details + "     [warnings are Ok... There are normally 3 of them]\n"
         details = details + "6. Close the Cmd window, then click Ok on this dialog window to proceed\n"
@@ -230,7 +230,7 @@ class Window(QMainWindow, Ui_MainWindow):
         # create and execute a batch file to do the npm install for eHaW Node
     def runNpmInstall(self):
         print("creating batch file to execute npm install")
-        npmBatchPath = os.getcwd() + r"\eHaW"
+        npmBatchPath = os.getcwd() + r"\Node"
         npmBatchFile =  npmBatchPath + r"\npmInstall.bat"
         with open(npmBatchFile, 'w') as outFile:
             outFile.write("cd " + npmBatchPath + "\n")
