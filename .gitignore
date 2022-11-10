@@ -1,5 +1,4 @@
 .vscode
-
 __pycache__
 __pycache__/*
 frag*
@@ -11,6 +10,5 @@ dist
 sqldrivers
 *.dll
 .env
-eHaW
 eHaWConfig.exe
 eHaWNode.bat

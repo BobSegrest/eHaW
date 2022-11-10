@@ -39,7 +39,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.le_WinlinkSentPath.setText((oPath +  r"\\sent").replace("\\\\","\\"))
             self.le_WinlinkCall.setText(patEnv[1])
         else:
-            oPath = str(patEnv[0])
+            oPath = str(patEnv[0]) + "/"
+            oPath = oPath + patEnv[1]
             self.le_WinlinkOutPath.setText(oPath +  "/out")
             self.le_WinlinkSentPath.setText(oPath +  "/sent")
             self.le_WinlinkCall.setText(patEnv[1])
