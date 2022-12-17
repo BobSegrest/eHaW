@@ -20,6 +20,7 @@ eDict = {}
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.checkWindows()
         self.setupUi(self)
         self.le_AdminPwd.setEchoMode(QLineEdit.EchoMode.PasswordEchoOnEdit)
         self.le_UserPwd.setEchoMode(QLineEdit.EchoMode.PasswordEchoOnEdit)
@@ -29,12 +30,20 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setWinlinkPaths()
         self.pb_Save.setFocus()
         
+    def checkWindows(self):
+        global bWindows
+        try:
+            from ctypes import windll   # Only exitst on Windows
+            bWindows = True
+        except ImportError:
+            bWindows=False
+            pass
+    
     def setWinlinkPaths(self):
         patEnv = self.getPatEnv()
         if bWindows:
             oPath = str(patEnv[0]) + "\\\\"
             oPath = oPath + patEnv[1]
-            #x = oPath.replace("\\\\","\\")
             self.le_WinlinkOutPath.setText((oPath +  r"\\out").replace("\\\\","\\"))
             self.le_WinlinkSentPath.setText((oPath +  r"\\sent").replace("\\\\","\\"))
             self.le_WinlinkCall.setText(patEnv[1])
@@ -105,10 +114,11 @@ class Window(QMainWindow, Ui_MainWindow):
         if bWindows:
             self.finalizeNodeShortcut()
             self.displaySqlInstructions()
-            self.statusbar.showMessage("Completing the Npm Install for eHaW Node",10000)
-            self.runNpmInstall()
-        if bWindows:
             os.remove("pat.exe")
+        else:
+            self.createDesktopFiles()
+        self.statusbar.showMessage("Completing the Npm Install for eHaW Node",10000)
+        self.runNpmInstall()
         self.statusbar.showMessage("All done for now.  Click Cancel to close this dialog, Launch the eHaW Node, the Moderator and give it a go!",10000)
 
         # Initialize the environmental variables
@@ -122,6 +132,8 @@ class Window(QMainWindow, Ui_MainWindow):
         envFile.write("EHAWUSERPWD=" + base64.b64encode(self.le_UserPwd.text().encode("utf-8")).decode("utf-8") + "\n")
         envFile.write("MODERATORUSER=" + base64.b64encode(self.le_ModeratorName.text().encode("utf-8")).decode("utf-8") + "\n")
         envFile.write("MODERATORPWD=" + base64.b64encode(self.le_ModeratorPwd.text().encode("utf-8")).decode("utf-8") + "\n")
+        cwd = os.getcwd()
+        envFile.write("WD=" + base64.b64encode(cwd.encode("utf-8")).decode("utf-8") + "\n") 
         envFile.close()
         # retrieve the env contents
         print("retrieving Moderator .env file")
@@ -134,6 +146,7 @@ class Window(QMainWindow, Ui_MainWindow):
         eDict.update({"EHAWUSERPWD" : base64.b64decode(os.getenv("EHAWUSERPWD")).decode("utf-8")})
         eDict.update({"MODERATORUSER" : base64.b64decode(os.getenv("MODERATORUSER")).decode("utf-8")})
         eDict.update({"MODERATORPWD" : base64.b64decode(os.getenv("MODERATORPWD")).decode("utf-8")})
+        eDict.update({"WD" : base64.b64decode(os.getenv("WD")).decode("utf-8")})
         # and we will add a few local references too for convenience during configuration
         eDict.update({"WINLINKCALL" : self.le_WinlinkCall.text()})
         eDict.update({"OPERATORCALL" : self.le_OperatorCall.text()})
@@ -195,6 +208,66 @@ class Window(QMainWindow, Ui_MainWindow):
             scriptFile.write(t)
         scriptFile.close()
 
+        # Create linux desktop and shell files
+    def createDesktopFiles(self):
+        print("Creating Linux desktop files")
+        self.statusbar.showMessage("Creating eHaW menu entries",1000)
+        wd = os.getcwd()
+        appPath = os.path.expanduser("~") + "/.local/share/applications"
+        # drop and create Moderator desktop file
+        if os.path.exists(appPath +"/eHaWModerator.desktop"):
+            os.remove(appPath + "/eHaWModerator.desktop")
+        with open(appPath + "/eHaWModerator.desktop", 'w') as outFile:
+            outFile.write("[Desktop Entry]\n")
+            outFile.write("Encoding=UTF-8\n")
+            outFile.write("Exec=" + wd + "/moderator -workDir " + wd + "\n")
+            outFile.write("Icon=" + wd + "/KO2FClientIcon.ico\n")
+            outFile.write("Type=Application\n")
+            outFile.write("Terminal=false\n")
+            outFile.write("Comment=eHaW Moderator Tool\n")
+            outFile.write("Name=eHaW Moderator\n")
+        outFile.close()
+        # drop and create Moderator Small desktop file
+        if os.path.exists(appPath +"/eHaWModeratorSm.desktop"):
+            os.remove(appPath + "/eHaWModeratorSm.desktop")
+        with open(appPath + "/eHaWModeratorSm.desktop", 'w') as outFile1:
+            outFile1.write("[Desktop Entry]\n")
+            outFile1.write("Encoding=UTF-8\n")
+            outFile1.write("Exec=" + wd + "/moderator_sm -workDir " + wd + "\n")
+            outFile1.write("Icon=" + wd + "/KO2FClientIcon.ico\n")
+            outFile1.write("Type=Application\n")
+            outFile1.write("Terminal=false\n")
+            outFile1.write("Comment=eHaW Moderator small Tool\n")
+            outFile1.write("Name=eHaW Moderator small\n")
+        outFile1.close()
+        # drop and create eHaW Node desktop file
+        if os.path.exists(appPath +"/eHaWNode.desktop"):
+            os.remove(appPath + "/eHaWNode.desktop")
+        with open(appPath + "/eHaWNode.desktop", 'w') as outFile2:
+            outFile2.write("[Desktop Entry]\n")
+            outFile2.write("Encoding=UTF-8\n")
+            outFile2.write("Exec=" + wd + "/eHaWNode\n")
+            outFile2.write("Icon=" + wd + "/KO2FClientIcon.ico\n")
+            outFile2.write("Type=Application\n")
+            outFile2.write("Terminal=true\n")
+            outFile2.write("Comment=eHaW Node Web Application\n")
+            outFile2.write("Name=eHaW Node\n")
+        outFile2.close()
+        # drop and create eHaW Node shell script
+        if os.path.exists(wd +"/eHaWModerator.desktop"):
+            os.remove(wd + "/eHaWNode")
+        with open(wd + "/eHaWNode", 'w') as outFile3:
+            outFile3.write("#!/bin/sh\n")
+            outFile3.write("cd " + wd + "/Node\n")
+            outFile3.write("npm start\n")
+        outFile3.close()
+        os.chmod(wd + "/eHaWNode",
+                 0o010 |
+                 0o040 |
+                 0o700 |
+                 0o1000 |
+                 0o4000 )
+
         # Configure the batch file for the eHaW Node shortcut
     def finalizeNodeShortcut(self):
         print("finalizing eHaW Node shortcut")
@@ -231,40 +304,47 @@ class Window(QMainWindow, Ui_MainWindow):
         # create and execute a batch file to do the npm install for eHaW Node
     def runNpmInstall(self):
         print("creating batch file to execute npm install")
-        npmBatchPath = os.getcwd() + r"\Node"
-        npmBatchFile =  npmBatchPath + r"\npmInstall.bat"
-        with open(npmBatchFile, 'w') as outFile:
-            outFile.write("cd " + npmBatchPath + "\n")
-            outFile.write("npm install\n")
-        outFile.close()
-        print("running npm instal")
-        subprocess.call(npmBatchFile)
-        os.remove(npmBatchFile)
+        if bWindows:
+            npmBatchPath = os.getcwd() + r"\Node"
+            npmBatchFile =  npmBatchPath + r"\npmInstall.bat"
+            with open(npmBatchFile, 'w') as outFile:
+                outFile.write("cd " + npmBatchPath + "\n")
+                outFile.write("npm install\n")
+            outFile.close()
+            print("running npm install")
+            subprocess.call(npmBatchFile)
+            os.remove(npmBatchFile)
+        else:
+            npmBatchFile = os.getcwd() + "/Node/npmInstall.sh"
+            with open(npmBatchFile, 'w') as outFile:
+                outFile.write("cd " + os.getcwd() + "/Node\n")
+                outFile.write("npm install\n")
+            outFile.close()
+            os.system("sh " + npmBatchFile)
+            os.remove(npmBatchFile)
 
     def cancelConfig(self):
         self.close()
 
     def getPatEnv(self):
-        global bWindows
-        bWindows = True
-        myCall = ""
-        mailBox = ""
-        proc = subprocess.Popen(['pat.exe', 'env'],
-                                shell=True,
-                                stdout=subprocess.PIPE,
-                                )
-        while True: # Infinite loop
-            output = proc.stdout.readline()
-            if proc.poll() is not None:
-                break
-            if output:
-                ln = str(output.strip())
-                if ln.find("PAT_MYCALL") != -1:
-                    myCall = ln[14:len(ln)-2]
-                if ln.find("PAT_MAILBOX_PATH") != -1:
-                    mailBox = ln[20:len(ln)-2]
-        if mailBox == "":
-            bWindows = False
+        if bWindows:
+            myCall = ""
+            mailBox = ""
+            proc = subprocess.Popen(['pat.exe', 'env'],
+                                    shell=True,
+                                    stdout=subprocess.PIPE,
+                                    )
+            while True: # Infinite loop
+                output = proc.stdout.readline()
+                if proc.poll() is not None:
+                    break
+                if output:
+                    ln = str(output.strip())
+                    if ln.find("PAT_MYCALL") != -1:
+                        myCall = ln[14:len(ln)-2]
+                    if ln.find("PAT_MAILBOX_PATH") != -1:
+                        mailBox = ln[20:len(ln)-2]
+        else:
             proc = subprocess.Popen("pat env",
                                 shell=True,
                                 stdout=subprocess.PIPE,

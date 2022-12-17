@@ -442,6 +442,9 @@ def createConnection():
 # main
 app = QApplication(sys.argv)
 parser = argparse.ArgumentParser()
+parser.add_argument("-workDir",
+                    help="The eHaW application working directory",
+                    required=False)
 parser.add_argument("-ubuntu", 
                     help="The ubuntu stylesheet will be used.",
                     action="store_true")
@@ -449,6 +452,18 @@ parser.add_argument("-none",
                     help="No stylesheet will be used.",
                     action="store_true")
 args = parser.parse_args()
+global bWindows
+try:
+    from ctypes import windll   # Only exists on Windows
+    bWindows = True
+except ImportError:
+    bWindows=False
+    if args.workDir:
+        wd = args.workDir
+        #print(os.getcwd())
+        os.chdir(wd)
+        #print(os.getcwd())
+    pass
 if not createConnection():
     sys.exit(1)
 if __name__ == "__main__":
