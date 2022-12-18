@@ -263,10 +263,11 @@ class Window(QMainWindow, Ui_MainWindow):
         outFile3.close()
         os.chmod(wd + "/eHaWNode",
                  0o010 |
+                 0o020 |
                  0o040 |
-                 0o700 |
-                 0o1000 |
-                 0o4000 )
+                 0o100 |
+                 0o200 |
+                 0o400 )
 
         # Configure the batch file for the eHaW Node shortcut
     def finalizeNodeShortcut(self):
