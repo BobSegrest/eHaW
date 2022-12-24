@@ -1,0 +1,51 @@
+Install Linux Mint
+	https://www.youtube.com/watch?v=bNEP5nhqaXA
+	
+Install improved wireless network driver
+	Evolve III Maestro Update - Persistent WiFi Drivers For Linux! - YouTube
+	
+Install 73Linux with all options selected
+	km4ack/73Linux (github.com)
+	Installing all options (the logging application in particular) will meet the eHaW SQL server requirement
+
+Open the Advanced Networking tool (not, the network tool) and…
+	Click the Plus button to create a new connection
+	Select Wi-Fi
+	Set the Connection name to eHaW
+	On the Wi-Fi tab
+		Set the SID to ehaw (yes, lower case)
+		Select Hospot as the Mode
+	On the Wi-Fi Security tab
+		Set the Security option to WPA &WPA2 Personal
+		Set the Password to ehaw1234
+		(yes, I know this is pretty light weight security, and it is intentional.  Remember that eHaW is by design OPEN to the Public.  We can't just set the security to None, because most Wi-Fi devices [phones, iPads…] will not connect to an entirely open network anymore)
+	On the IPv4 Settings tab
+		Verify the Method is set to Shared to other computers
+		Click Add and enter the following information on the new Address line
+			192.168.223.1	24	192.168.223.1
+				The first address is where your hotspot network will start.  The 3rd quartet (223 in my example) needs to be unique within your Wi-Fi operating range. Any number between 1 and 255 will work, but most off the shelf devices (wireless routers…) tend to use 1 or a single digit, so I avoid them.  This address is also going to be the IP address for your system on the Hotspot network.
+				The second number should almost always be 24, which limits the number of concurrent devices on your hotspot to a bit over 250.
+				The 3rd address is the default route for your Hotspot network.  We set it to match your system because this is where we want the "Public" to connect.  And the plan to off eHaW (and nothing but eHaW) as the only service on this network.  Do NOT make any other change that would allow the Public to connect to any other network through your system.
+		Check the box for Require IPv4 addressing
+	Click Save then Close the Advanced Networking dialog
+ 
+sudo mysql
+	create user ko2f@localhost identified by 'passwd';
+	grant all privileges on *.* to ko2f@localhost with grant option;
+	create user ehawuser@localhost identified by 'passwd';
+	create user moderator@localhost identified by 'passwd';
+
+sudo apt install -y npm
+sudo apt-get install libcap2-bin
+sudo setcap cap_net_bind_service=+ep /bin/node
+
+eHaW-Moderator/eHaW_Linux_Kit_1.0.tar.gz at main · BobSegrest/eHaW-Moderator (github.com)
+
+cd ~/bin/eHaW/Node
+mysql -u root -p
+	enter password  [passwd]
+	source Setup_eHaW_support_database.sql
+	exit
+
+A deployment demo can be downloaded from BobSegrest/eHaW-Moderator (github.com 
+https://github.com/BobSegrest/eHaW-Moderator/blob/main/eHaW%20Linux%20Deployment.mp4
