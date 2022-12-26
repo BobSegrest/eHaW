@@ -51,7 +51,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.loadOpenMessageQueue()
         self.loadActiveMessage()
         self.loadMessageQueue()
-        self.loadEsuToList()
         self.reloadAdminData()
         self.lcd_OutCount.display(len(get_MIdList(self.le_WinlinkOutPath.text())))
 
@@ -155,14 +154,6 @@ class Window(QMainWindow, Ui_MainWindow):
         tAliases = QSqlQuery("SELECT tAlias FROM eHaW.transportAlias")
         while tAliases.next():
             self.lw_Transport.addItem(tAliases.value(0))
-
-        #Load Event Status Update To List
-    def loadEsuToList(self):
-        self.lw_EsuToList.setAlternatingRowColors(True)
-        self.lw_EsuToList.clear()
-        toList = QSqlQuery("SELECT msgTo FROM eHaW.esuToList")
-        while toList.next():
-            self.lw_EsuToList.addItem(toList.value(0))
 
         #Load Open Message Queue
     def loadOpenMessageQueue(self):
