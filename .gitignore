@@ -12,3 +12,4 @@ sqldrivers
 .env
 eHaWConfig.exe
 eHaWNode.bat
+*.pyc
