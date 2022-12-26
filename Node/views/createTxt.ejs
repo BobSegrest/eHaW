@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eHaW Txt</title>
+  	<link rel="stylesheet" href="./css/bootstrap.min.css">
+    <script src="./js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid p-3 bg-primary text-white text-center">
+      <h4>Emergency Health & Welfare Message Service</h4>
+      <h1>Create Txt (SMS) Message</h1>
+      <h6> <%=eventTxt%> </h6>
+    </div>
+    <form action="/createMsg" method="POST">
+      <div class="form-group mb-3 mt-3 ms-1 me-1">
+        <label for="text" class="control-label">From:</label>
+        <input type="text" class="form-control" id="from"
+               placeholder="Enter your name" 
+               name="from" onkeyup="countChars();" required />
+      </div>
+      <div class="form-group mb-3 mt-3 ms-1 me-1">
+        <label for="text" class="control-label">To:</label>
+        <select class="form-control" id="carrier" name="carrier" 
+                onchange="setEmail();" required >
+          <option>I don't know!</option>
+          <option>AT&T</option>
+          <option>Verizon</option>
+          <option>T-Mobile</option>
+          <option>Sprint</option>
+        </select>        
+        <input type="tel" class="form-control" id="to" 
+               placeholder="Enter a 10 digit cell number" 
+               name="to" onchange="setEmail();" required />
+        <input type="text" class="form-control" id="email" 
+               name="email" readonly hidden required >
+        <input type="text" class="form-control" id="mType" 
+               name="mType" readonly hidden required >
+        <p class="text-secondary" id="sms">Txt address: </p>
+   </div>
+      <div class="form-group mb-3 mt-3 ms-1 me-1">
+        <label for="msg" class="control-label">Message:</label>
+        <textarea type="text" class="form-control" id="msg" 
+               placeholder="Enter the message you want to send here..." 
+               name="msg" rows="5" onkeyup="countChars();" required ></textarea>
+        <p class="text-secondary" id="charNum">85 characters remaining</p>
+      </div>
+      <div class="mx-auto" style="width:350px" align="center">
+        <button type="submit" class="btn btn-outline-success">Submit</button>
+      </div>
+    </form>
+    <p> </p>
+    <div class="row">
+      <div class="col" align="right">
+        <form action="/" method="GET">
+          <button type="submit" class="btn btn-danger">Cancel</button>
+        </form>
+      </div>
+      <div class="col" align="left">
+        <form action="/status" method="GET">
+          <button type="submit" class="btn btn-warning" >Status</button>
+        </form>
+      </div>
+    </div>
+
+</body>
+</html>
+
+<script>
+  function setEmail(){
+    let toSel = document.getElementById("to").value;
+    let carrierSel = document.getElementById("carrier").value;
+
+    if(toSel != undefined && carrierSel != undefined){
+      if(carrierSel === "AT&T"){
+        document.getElementById("email").value = toSel + "@txt.att.net";
+      }
+      else if(carrierSel === "Verizon"){
+        document.getElementById("email").value = toSel + "@vtext.com";
+      }
+      else if(carrierSel === "Sprint"){
+        document.getElementById("email").value = toSel + "@messaging.sprintpcs.com";
+      }
+      else if(carrierSel === "T-Mobile"){
+        document.getElementById("email").value = toSel + "@vtmomail.net";
+      }
+      else if(carrierSel === "I don't know!"){
+        let emailStr = toSel + "@txt.att.net, ";
+            emailStr = emailStr + toSel + "@vtext.com, ";
+            emailStr = emailStr +  toSel + "@messaging.printpcs.com, ";
+            emailStr = emailStr +  toSel + "@vtmomail.net";
+        document.getElementById("email").value = emailStr;
+      } else{
+        document.getElementById("email").value = "";
+      }
+      document.getElementById("sms").innerHTML = "Txt Address: " +
+        document.getElementById("email").value;
+    };
+    document.getElementById("mType").value = "SMS";
+  }
+
+  function countChars(){
+    var maxLength = 85
+    var fromLength = document.getElementById("from").value.length;
+    var msgLength = document.getElementById("msg").value.length;
+    var charRemain = (maxLength - (fromLength + msgLength));
+    
+    if(charRemain < 0){
+        document.getElementById("charNum").innerHTML = '<span style="color: red;">You have exceeded the limit of '+maxLength+' characters</span>';
+    }else{
+        document.getElementById("charNum").innerHTML = charRemain+' characters remaining';
+    }
+  }
+
+  function goBack() {
+    window.history.back();
+  }
+</script>

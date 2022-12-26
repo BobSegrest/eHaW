@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eHaW Email</title>
+  	<link rel="stylesheet" href="./css/bootstrap.min.css">
+    <script src="./js/bootstrap.bundle.min.js"></script>
+  </head>
+  
+  <body>
+    <div class="container-fluid p-3 bg-primary text-white text-center">
+      <h4>Emergency Health & Welfare Message Service</h4>
+      <h1>Create Email Message</h1>
+      <h6><%=eventTxt%></h6>
+    </div>
+    <form action="/createMsg" method="POST">
+      <div class="form-group mb-3 mt-3 ms-1 me-1">
+        <label for="text" class="control-label">From:</label>
+        <input type="text" class="form-control" id="from" 
+               placeholder="Enter your name" name="from" 
+               required />
+      </div>
+      <div class="form-group mb-3 mt-3 ms-1 me-1">
+        <label for="email" class="control-label">To:</label>
+        <input type="email" multiple class="form-control" id="to" 
+               placeholder="Enter 1 or more email addresses, separated by commas ','" name="email" required />
+        <input type="text" class="form-control" id="mType" 
+               name="mType" readonly hidden required >
+      </div>
+      <div class="form-group mb-3 mt-3 ms-1 me-1">
+        <label for="msg" class="control-label">Message:</label>
+        <textarea type="text" class="form-control" id="message" 
+               placeholder="Enter the message you want to send here..." 
+               name="msg" rows="5" onkeyup="countChars(this);" required ></textarea>
+        <p class="text-secondary" id="charNum">1000 characters remaining</p>
+      </div>
+      <div class="mx-auto" style="width:350px" align="center">
+        <button type="submit" class="btn btn-outline-success">Submit</button>
+      </div>
+    </form>
+    <p> </p>
+    <div class="row">
+      <div class="col" align="right">
+        <form action="/" method="GET">
+          <button type="submit" class="btn btn-danger">Cancel</button>
+        </form>
+      </div>
+      <div class="col" align="left">
+        <form action="/status" method="GET">
+          <button type="submit" class="btn btn-warning" >Status</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  function countChars(obj){
+    let maxLength = 1000;
+    let strLength = obj.value.length;
+    let charRemain = maxLength - strLength;
+    
+    if(charRemain < 0){
+        document.getElementById("charNum").innerHTML = '<span style="color: red;">You have exceeded the limit of '+maxLength+' characters</span>';
+    }else{
+        document.getElementById("charNum").innerHTML = charRemain+' characters remaining';
+    }
+    document.getElementById("mType").value = "Email";
+  }
+
+  function goBack() {
+    window.history.back();
+  }
+</script>
