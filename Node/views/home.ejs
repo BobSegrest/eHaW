@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>eHaW</title>
+      <link rel="stylesheet" href="./css/bootstrap.min.css">
+   </head>
+
+   <body>
+      <div class="container-fluid p-5 bg-primary text-white text-center">
+        <h1>Welcome to eHaW</h1>
+        <h2>Emergency Health & Welfare Message Service</h2>
+        <h6> <%=eventTxt%> </h6>
+      </div>
+
+      <div class="container-fluid p-1 bg-white text-black">
+       <p>This service will allow you to send health and welfare email messages 
+          to people outside of an emergency event area when local Internet, telephone  
+          and cell phone services are not available.</p>
+       <p>Health and Welfare messages allow you to tell friends, relatives or 
+          other people outside of an emergency area about your current situation.  
+          Examples might include where you are, your health and condition, any critical 
+          needs, your current plans or other details that might help others help you 
+          or find comfort in knowing your status.</p>
+       <p>Your messages ARE NOT PRIVATE!  This service is provided by licensed amateur 
+          radio operators in your local community, working with operators in other areas.   
+          Your messages are visible to anyone with suitable equipment and knowledge.   
+          PLEASE DO NOT include account numbers, pin numbers or any other sensitive personal 
+          or financial information in your messages.</p>
+       <p>You can only Send messages.  This service cannot receive messages for you.</p>
+       <p>Federal Law prohibits amateur radio operators from transmitting vulgar, 
+          offensive, business communications, any discussion related to illegal  
+          activities or content encrypted/encoded to obscure its meaning. Your messages 
+          must be reviewed for FCC compliance by the local amateur radio operator and 
+          may be accepted and sent, or declined at their sole discretion.</p>
+       <p>This is a BEST Effort service, provided without charge by amateur radio volunteers 
+          in your local community and elsewhere.  While we are working hard to support 
+          you and the local community, we cannot guarantee or accept any liability of 
+          any sort for your messages.  Remember please that we are your local neighbors, 
+          possibly impacted by the same emergency, doing our best and trying to help...</p>
+        <p>Using this service indicates you have read, understand and accept the 
+           constraints and limitations of this service in the spirit it is offered.</p>
+      </div> 
+
+      <div class="row">
+         <div class="col">
+            <form action="/createEmail" method="GET">
+               <div class="btn">
+                  <button type="submit" class="btn btn-outline-success">Create Email Message</button> 
+                  <p>An email message can contain up to 1000 characters.  You will need to enter 
+                     your name so the receipient will know who the email is from, and 1 or more email 
+                     addresses for your message will be sent to.
+                  </p>
+               </div>
+            </form>
+         </div>
+         <div class="col">
+            <form action="/createTxt" method="GET">
+               <div class="btn">
+                  <button type="submit" class="btn btn-outline-success">Create Txt Message</button> 
+                  <p>Txt (SMS) messages are limited to 85 characters.  You will need to enter 
+                     your name and a telephone number for the person who will receive the txt 
+                     message. We will also ask you for the receipient's cell phone company.
+                  </p>
+               </div>
+            </form>
+         </div>
+      </div>
+      <div align="center">
+         <form action="/status" method="GET">
+            <button type="submit" style="width:250px" class="btn btn-warning">Status</button>
+         </form>
+      </div>
+   </body>
+</html>
