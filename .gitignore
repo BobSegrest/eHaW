@@ -10,6 +10,6 @@ dist
 sqldrivers
 *.dll
 .env
-eHaWConfig.exe
 eHaWNode.bat
 *.pyc
+eHaW_Installer.exe

@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>709</width>
+    <height>356</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>eHaW Config</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>KO2FClientIcon.ico</normaloff>KO2FClientIcon.ico</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGroupBox" name="gb_WinlinkPaths">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>150</y>
+      <width>401</width>
+      <height>180</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Winlink File Paths</string>
+    </property>
+    <widget class="QLineEdit" name="le_WinlinkExePath">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>371</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>If Pat is in your system or user path, leave this blank</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>80</y>
+       <width>160</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Winlink Out Folder Path</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_WinlinkOutPath">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>371</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="placeholderText">
+      <string>C:\Users\login\AppData\Local\pat\mailbox\callsign\out</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_WinlinkSentPath">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>150</y>
+       <width>371</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="placeholderText">
+      <string>C:\Users\login\AppData\Local\pat\mailbox\callsign\sent</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>130</y>
+       <width>160</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Winlink Sent Folder Path</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>160</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Winlink Executable Path</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="gb_UserAccounts">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>271</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>User Account Details</string>
+    </property>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>28</y>
+       <width>100</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>eHaW Admin User</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_UserName">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>99</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="placeholderText">
+      <string>eHaWuser</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_AdminPwd">
+     <property name="geometry">
+      <rect>
+       <x>146</x>
+       <y>49</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="placeholderText">
+      <string>*********</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>78</y>
+       <width>90</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>eHaW User</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>156</x>
+       <y>28</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Password</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_UserPwd">
+     <property name="geometry">
+      <rect>
+       <x>146</x>
+       <y>99</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="placeholderText">
+      <string>*********</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>156</x>
+       <y>78</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Password</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_AdminName">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>49</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="placeholderText">
+      <string>ko2f</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>156</x>
+       <y>129</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Password</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>129</y>
+       <width>90</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Moderator User</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_ModeratorPwd">
+     <property name="geometry">
+      <rect>
+       <x>146</x>
+       <y>150</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="placeholderText">
+      <string>*********</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_ModeratorName">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>150</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="placeholderText">
+      <string>eHaWmoderator</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pb_Cancel">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>300</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cancel</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="tb_Info">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>200</y>
+      <width>256</width>
+      <height>90</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="placeholderText">
+     <string>Fill in the fields and click Save to continue.  Or.. just click Save and we will walk you through it.</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_Save">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>300</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="bg_EventDetails">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>13</y>
+      <width>401</width>
+      <height>130</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Initial Event Details</string>
+    </property>
+    <widget class="QLineEdit" name="le_OperatorCall">
+     <property name="geometry">
+      <rect>
+       <x>146</x>
+       <y>50</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="placeholderText">
+      <string>Your Callsign</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>156</x>
+       <y>29</y>
+       <width>90</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Operator Callsign</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>29</y>
+       <width>90</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Winlink Callsign</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_EventLocation">
+     <property name="geometry">
+      <rect>
+       <x>19</x>
+       <y>99</y>
+       <width>370</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="placeholderText">
+      <string>Short (20-60 char) string to identify the Event/Location of messages</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>29</x>
+       <y>79</y>
+       <width>110</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Initial Event Location</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_WinlinkCall">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>50</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="placeholderText">
+      <string>Your Winlink  Callsign</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>pb_Save</tabstop>
+  <tabstop>le_AdminName</tabstop>
+  <tabstop>le_AdminPwd</tabstop>
+  <tabstop>le_UserName</tabstop>
+  <tabstop>le_UserPwd</tabstop>
+  <tabstop>le_ModeratorName</tabstop>
+  <tabstop>le_ModeratorPwd</tabstop>
+  <tabstop>le_WinlinkCall</tabstop>
+  <tabstop>le_OperatorCall</tabstop>
+  <tabstop>le_EventLocation</tabstop>
+  <tabstop>le_WinlinkExePath</tabstop>
+  <tabstop>le_WinlinkOutPath</tabstop>
+  <tabstop>le_WinlinkSentPath</tabstop>
+  <tabstop>pb_Cancel</tabstop>
+  <tabstop>tb_Info</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>le_AdminName</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>93</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_AdminPwd</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>213</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>91</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_UserName</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>92</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_UserPwd</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>119</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>102</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_ModeratorName</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>110</x>
+     <y>170</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>94</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_ModeratorPwd</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>166</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>96</x>
+     <y>307</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_WinlinkCall</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>412</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>89</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_OperatorCall</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>512</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>105</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_EventLocation</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>386</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>106</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_WinlinkExePath</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>347</x>
+     <y>209</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>93</x>
+     <y>307</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_WinlinkOutPath</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>331</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>109</x>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_WinlinkSentPath</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pb_Save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>356</x>
+     <y>305</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>119</x>
+     <y>317</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
