@@ -25,7 +25,7 @@
         <label for="text" class="control-label">To:</label>
         <select class="form-control" id="carrier" name="carrier" 
                 onchange="setEmail();" required >
-          <option>I don't know!</option>
+          <option>Select destination carrier here  (if known)</option>
           <option>AT&T</option>
           <option>Verizon</option>
           <option>T-Mobile</option>
@@ -86,10 +86,10 @@
       else if(carrierSel === "T-Mobile"){
         document.getElementById("email").value = toSel + "@vtmomail.net";
       }
-      else if(carrierSel === "I don't know!"){
+      else if(true){
         let emailStr = toSel + "@txt.att.net, ";
             emailStr = emailStr + toSel + "@vtext.com, ";
-            emailStr = emailStr +  toSel + "@messaging.printpcs.com, ";
+            emailStr = emailStr +  toSel + "@messaging.sprintpcs.com, ";
             emailStr = emailStr +  toSel + "@vtmomail.net";
         document.getElementById("email").value = emailStr;
       } else{
