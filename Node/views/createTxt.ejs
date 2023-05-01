@@ -32,7 +32,7 @@
           <option>Sprint</option>
         </select>        
         <input type="tel" class="form-control" id="to" 
-               placeholder="Enter a 10 digit cell number" 
+               placeholder="Enter a single, 10 digit cell number" 
                name="to" onchange="setEmail();" required />
         <input type="text" class="form-control" id="email" 
                name="email" readonly hidden required >
@@ -70,7 +70,7 @@
 
 <script>
   function setEmail(){
-    let toSel = document.getElementById("to").value;
+    let toSel = formatPhoneNumber(document.getElementById("to").value);
     let carrierSel = document.getElementById("carrier").value;
 
     if(toSel != undefined && carrierSel != undefined){
@@ -99,6 +99,15 @@
         document.getElementById("email").value;
     };
     document.getElementById("mType").value = "SMS";
+  }
+
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      return match[1] + match[2] + match[3];
+    }
+    return null;
   }
 
   function countChars(){
