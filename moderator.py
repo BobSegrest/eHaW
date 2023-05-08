@@ -29,6 +29,7 @@ class Window(QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)
         self.actMsgId = 0
+        self.deleting = False
         self.loadInitialData()
         self.pb_ActMsgAccept.clicked.connect(self.AcceptMsg)
         self.pb_ActMsgDecline.clicked.connect(self.DeclineMsg)
@@ -40,7 +41,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.pb_ReloadAdmin.clicked.connect(self.reloadAdminData)
         self.pb_EventCreate.clicked.connect(self.createNewEvent)
         self.pb_AddTransport.clicked.connect(self.addTransportAlias)
+        self.pb_DeleteTransport.clicked.connect(self.delTransportAlias)
         self.pb_EventSave.clicked.connect(self.saveNewEvent)
+        self.lw_Transport.currentItemChanged.connect(self.enableAliasDelete)
+        self.pb_DeleteTransport.setEnabled(False)
 
 
     def loadInitialData(self):
@@ -343,6 +347,28 @@ class Window(QMainWindow, Ui_MainWindow):
                         self.cb_Transport.setCurrentIndex(t)
             else:
                 self.statusbar.showMessage("That alias appears to already be in the Transport Alias list.",2000)
+
+    def enableAliasDelete(self, i):
+        if not self.deleting:
+            global tbdAlias 
+            tbdAlias = i.text()
+            self.pb_DeleteTransport.setEnabled(True)
+    
+
+    def delTransportAlias(self):
+        qString = 'SELECT aliasId from transportAlias WHERE tAlias="' + tbdAlias + '"'
+        aId = QSqlQuery(qString)
+        while aId.next():
+            tbdAId = aId.value(0)
+            if tbdAId > 0:
+                qString = "DELETE FROM transportAlias WHERE aliasId=" + str(tbdAId)
+                delAlias = QSqlQuery(qString)
+                delAlias.exec()
+                self.deleting = True
+                self.loadTransportAliases()
+                self.loadTransportCb()
+                self.pb_DeleteTransport.setEnabled(False)
+                self.deleting = False
 
         #Load the Transport comboBox
     def loadTransportCb(self):

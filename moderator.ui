@@ -722,6 +722,24 @@
         <string>Add</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="pb_DeleteTransport">
+       <property name="geometry">
+        <rect>
+         <x>690</x>
+         <y>200</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Delete</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="gb_EventConfig">
       <property name="geometry">

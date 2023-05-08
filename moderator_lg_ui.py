@@ -282,6 +282,12 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.pb_AddTransport.setFont(font)
         self.pb_AddTransport.setObjectName("pb_AddTransport")
+        self.pb_DeleteTransport = QtWidgets.QPushButton(self.gb_WinlinkConfig)
+        self.pb_DeleteTransport.setGeometry(QtCore.QRect(1190, 420, 90, 30))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.pb_DeleteTransport.setFont(font)
+        self.pb_DeleteTransport.setObjectName("pb_DeleteTransport")
         self.gb_EventConfig = QtWidgets.QGroupBox(self.tab_Admin)
         self.gb_EventConfig.setGeometry(QtCore.QRect(10, 20, 1640, 360))
         font = QtGui.QFont()
@@ -360,7 +366,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         self.le_ActMsgSelectId.returnPressed.connect(self.pb_ActMsgRetrieve.animateClick) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -408,6 +414,7 @@ class Ui_MainWindow(object):
         self.lw_Transport.setSortingEnabled(__sortingEnabled)
         self.label_4.setText(_translate("MainWindow", "Transport Alias List"))
         self.pb_AddTransport.setText(_translate("MainWindow", "Add"))
+        self.pb_DeleteTransport.setText(_translate("MainWindow", "Delete"))
         self.gb_EventConfig.setTitle(_translate("MainWindow", "eHaW Event Configuration"))
         item = self.tw_EventConfig.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Event ID"))
