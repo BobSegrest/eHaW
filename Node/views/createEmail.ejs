@@ -10,7 +10,11 @@
   </head>
   
   <body>
-
+    <div class="container-fluid p-3 bg-primary text-white text-center">
+      <h4>Emergency Health & Welfare Message Service</h4>
+      <h1>Create Email Message</h1>
+      <h6><%=eventTxt%></h6>
+    </div>
     <form action="/createMsg" method="POST">
       <div class="form-group mb-3 mt-3 ms-1 me-1">
         <label for="text" class="control-label">From:</label>
@@ -20,7 +24,7 @@
       </div>
       <div class="form-group mb-3 mt-3 ms-1 me-1">
         <label for="email" class="control-label">To:</label>
-	<div class="row">
+	    <div class="row">
           <div class="col-10">
             <input type="email" multiple class="form-control" id="to" 
                    placeholder="Enter 1 or more email addresses, separated by commas ','" name="email" required />
