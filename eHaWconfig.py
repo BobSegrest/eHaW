@@ -1,6 +1,7 @@
 import sys
 import base64
 import os
+import platform
 import time
 import subprocess
 
@@ -20,7 +21,6 @@ eDict = {}
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.checkWindows()
         self.setupUi(self)
         self.le_AdminPwd.setEchoMode(QLineEdit.EchoMode.PasswordEchoOnEdit)
         self.le_UserPwd.setEchoMode(QLineEdit.EchoMode.PasswordEchoOnEdit)
@@ -30,15 +30,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setWinlinkPaths()
         self.pb_Save.setFocus()
         
-    def checkWindows(self):
-        global bWindows
-        try:
-            from ctypes import windll   # Only exitst on Windows
-            bWindows = True
-        except ImportError:
-            bWindows=False
-            pass
-    
     def setWinlinkPaths(self):
         patEnv = self.getPatEnv()
         if bWindows:
@@ -295,7 +286,7 @@ class Window(QMainWindow, Ui_MainWindow):
         details = details + "      [don't forget to include the quotation marks...]\n"
         details = details + "3. When prompted, enter you eHaW admin password\n"
         details = details + "4. Enter the following command line:\n"
-        details = details + '    source ' + os.getcwd() + r'\Node\Setup_eHaW_support_database.sql\n'
+        details = details + '    source ' + os.getcwd() + r'\Node\Setup_eHaW_support_database.sql' + "\n"
         details = details + "5. Scroll your Cmd window as needed and verify there were no errors\n"
         details = details + "     [warnings are Ok... There are normally 3 of them]\n"
         details = details + "6. Close the Cmd window, then click Ok on this dialog window to proceed\n"
@@ -363,8 +354,15 @@ class Window(QMainWindow, Ui_MainWindow):
         return [mailBox, myCall, bWindows]
 
 
+
 # main
 app = QApplication(sys.argv)
+global bWindows
+print("defining bWindows")
+if platform.system() == "Windows":
+    bWindows = True
+else:
+    bWindows = False
 if __name__ == "__main__":
     win = Window()
     win.show()
