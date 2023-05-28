@@ -13,3 +13,4 @@ sqldrivers
 eHaWNode.bat
 *.pyc
 eHaW_Installer.exe
+*.hold
