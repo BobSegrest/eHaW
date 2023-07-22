@@ -282,7 +282,7 @@ class Window(QMainWindow, Ui_MainWindow):
         msg.setStyleSheet("QLabel{min-width:650 px; font-size: 15px;} QPushButton{ width:25px; font-size: 18px; }")
         details = "1. Open a new Cmd window\n"
         details = details + "2. Start MySql with the following command:\n"
-        details = details + r'   "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u adminName -p' + "\n"
+        details = details + r'   "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u ' + self.le_AdminName.text() + " -p\n"
         details = details + "      [don't forget to include the quotation marks...]\n"
         details = details + "3. When prompted, enter you eHaW admin password\n"
         details = details + "4. Enter the following command line:\n"
